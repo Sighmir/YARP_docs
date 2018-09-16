@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: packages/YARP/classes/Character.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: packages/YARP/classes/Character.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+/**
+ * Implements a Character.
+ * @class yarp.Character
+ * @extends yarp.GMObject
+ */
+class Character extends yarp.GMObject {
+  /**
+   * Creates an instance of Character.
+   * @param {Object} params
+   * @param {String} params.id
+   * @param {String} params.socialClub
+   * @param {Number} [params.age=18]
+   * @param {String} [params.model='mp_m_freemode_01']
+   * @param {Object} [params.face={}]
+   * @param {String} [params.lastLogin='']
+   * @param {String} [params.wallet=yarp.variables['Starting Wallet'].value]
+   * @param {String} [params.bank=yarp.variables['Starting Bank'].value]
+   * @param {Number} [params.health=100]
+   * @param {Number} [params.armour=0]
+   * @param {Number} [params.hunger=0]
+   * @param {Number} [params.thirst=0]
+   * @param {Number} [params.xp=0]
+   * @param {String} [params.position=yarp.variables['First Spawn'].value]
+   * @param {String} [params.heading=yarp.variables['First Heading'].value]
+   * @param {Array&lt;String>} [params.groups=[]]
+   * @param {Object} [params.weapons={}]
+   * @param {Object} [params.skills={}]
+   * @param {Number} [params.weight=0]
+   * @param {Object} [params.inventory={}]
+   * @param {Object} [params.customization={}]
+   * @param {Object} [params.decoration={}]
+   * @param {Object} [params.clothes={}]
+   * @param {Function} [params.enter=() => {}]
+   * @param {Function} [params.leave=() => {}]
+   * @memberof yarp.Character
+   */
+  constructor(params) {
+    super();
+    if ((params.id &amp;&amp; params.socialClub) != null) {
+      this._id = params.id;
+      this._socialClub = params.socialClub;
+      this._age = this.default(params.age, 18);
+      this._model = this.default(params.model, 'mp_m_freemode_01');
+      this._face = this.default(params.age, {});
+      this._lastLogin = this.default(params.lastLogin, '');
+      this._wallet = this.default(params.wallet, yarp.variables['Starting Wallet'].value);
+      this._bank = this.default(params.bank, yarp.variables['Starting Bank'].value);
+      this._health = this.default(params.health, 100);
+      this._armour = this.default(params.armour, 0);
+      this._position = this.default(params.position, yarp.variables['First Spawn'].value);
+      this._heading = this.default(params.heading, yarp.variables['First Heading'].value);
+      this._groups = this.default(params.groups, []);
+      this._weapons = this.default(params.weapons, {});
+      this._skills = this.default(params.skills, {});
+      this._weight = this.default(params.weight, 0);
+      this._hunger = this.default(params.hunger, 0);
+      this._thirst = this.default(params.thirst, 0);
+      this._xp = this.default(params.xp, 0);
+      this._inventory = this.default(params.inventory, {});
+      this._customization = this.default(params.customization, {});
+      this._decoration = this.default(params.decostation, {});
+      this._clothes = this.default(params.clothers, {});
+      this._enter = this.default(params.enter, () => {}).toString();
+      this._leave = this.default(params.leave, () => {}).toString();
+      this.players = [];
+      yarp.mng.register(this);
+      this.makeGetterSetter();
+    } else {
+      throw new TypeError('Character class requires id and socialClub to be instantiated.\nParameters: ' + JSON.stringify(params));
+    }
+  }
+
+  /**
+   * Get character player.
+   * @instance
+   * @function player
+   * @memberof yarp.Character
+   * @return {Object} Player.
+   */
+  get player() {
+    for (let player of mp.players.toArray()) {
+      if (player.name == this.id) {
+        return player;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get character user.
+   * @instance
+   * @function user
+   * @memberof yarp.Character
+   * @return {Object} User.
+   */
+  get user() {
+    return yarp.users[this.socialClub];
+  }
+
+  /**
+   * Get character balance.
+   * @instance
+   * @function balance
+   * @memberof yarp.Character
+   * @return {Array&lt;Object>} Balance.
+   */
+  get balance() {
+    let balance = [];
+    for (let transaction of yarp.transactions.toArray()) {
+      if (transaction.source == this.id || transaction.target == this.id) {
+        balance.push(transaction);
+      }
+    }
+    return balance;
+  }
+
+  /**
+   * Call enter fuction for character and it's groups.
+   * @instance
+   * @function enter
+   * @memberof yarp.Character
+   * @return {Function} Enter functions.
+   * @fires characterJoinedGroup
+   */
+  get enter() {
+    return () => {
+      let player = this.player;
+      if (this._enter) {
+        (eval(this._enter))(player);
+      }
+      for (let group of this.groups) {
+        yarp.groups[group].enter(player);
+        mp.events.call('characterJoinedGroup', player, this, group);
+      }
+    };
+  }
+
+  /**
+   * Set the enter function as a string
+   * @instance
+   * @function enter
+   * @memberof yarp.Character
+   * @param {Function} value Enter function.
+   */
+  set enter(value) {
+    this._enter = value.toString();
+  }
+
+  /**
+   * Call leave fuction for character and it's groups.
+   * @instance
+   * @function leave
+   * @memberof yarp.Character
+   * @return {Function} Leave functions.
+   * @fires characterLeftGroup
+   */
+  get leave() {
+    return () => {
+      let player = this.player;
+      if (this._leave) {
+        (eval(this._leave))(player);
+      }
+      for (let group of this.groups) {
+        yarp.groups[group].leave(player);
+        mp.events.call('characterLeftGroup', player, this, group);
+      }
+    };
+  }
+
+  /**
+   * Set the leave function as a string
+   * @instance
+   * @function leave
+   * @memberof yarp.Character
+   * @param {Function} value Leave function.
+   */
+  set leave(value) {
+    this._leave = value.toString();
+  }
+
+  /**
+   * Get the health value
+   * @instance
+   * @function health
+   * @memberof yarp.Character
+   */
+  get health() {
+    return this._health;
+  }
+
+  /**
+   * Set the health value for the player
+   * @instance
+   * @function health
+   * @memberof yarp.Character
+   * @param {Number} value Health value
+   */
+  set health(value) {
+    this._health = value;
+    let player = this.player;
+    if (player) {
+      player.health = value;
+    }
+  }
+
+  /**
+   * Get the wallet value
+   * @instance
+   * @function wallet
+   * @memberof yarp.Character
+   */
+  get wallet() {
+    return this._wallet;
+  }
+
+  /**
+   * Set the wallet value for the player
+   * @instance
+   * @function wallet
+   * @memberof yarp.Character
+   * @param {Number} value Wallet value
+   */
+  set wallet(value) {
+    this._wallet = value;
+    let player = this.player;
+    if (player) {
+      player.setVariable('PLAYER_WALLET', this.wallet);
+    }
+    this.save();
+  }
+
+  /**
+   * Get the bank value
+   * @instance
+   * @function bank
+   * @memberof yarp.Character
+   */
+  get bank() {
+    return this._bank;
+  }
+
+  /**
+   * Set the bank value for the player
+   * @instance
+   * @function bank
+   * @memberof yarp.Character
+   * @param {Number} value Bank value
+   */
+  set bank(value) {
+    this._bank = value;
+    let player = this.player;
+    if (player) {
+      player.setVariable('PLAYER_BANK', this.bank);
+    }
+    this.save();
+  }
+
+  /**
+   * Get the hunger value
+   * @instance
+   * @function hunger
+   * @memberof yarp.Character
+   */
+  get hunger() {
+    return this._hunger;
+  }
+
+  /**
+   * Set the hunger value for the player
+   * @instance
+   * @function hunger
+   * @memberof yarp.Character
+   * @param {Number} value Hunger value
+   */
+  set hunger(value) {
+    if (value > 100) {
+      this.health -= (value-100);
+      value = 100;
+    } else if (value &lt; 0) {
+      this.health += value;
+      value = 0;
+    }
+    this._hunger = value;
+    let player = this.player;
+    if (player) {
+      player.setVariable('PLAYER_HUNGER', this.hunger);
+    }
+  }
+
+  /**
+   * Get the thirst value
+   * @instance
+   * @function thirst
+   * @memberof yarp.Character
+   */
+  get thirst() {
+    return this._thirst;
+  }
+
+  /**
+   * Set the thirst value for the player
+   * @instance
+   * @function thirst
+   * @memberof yarp.Character
+   * @param {Number} value Thirst value
+   */
+  set thirst(value) {
+    if (value > 100) {
+      this.health -= (value-100);
+      value = 100;
+    } else if (value &lt; 0) {
+      this.health += value;
+      value = 0;
+    }
+    this._thirst = value;
+    let player = this.player;
+    if (player) {
+      player.setVariable('PLAYER_THIRST', this.thirst);
+    }
+  }
+
+  /**
+   * Get the xp value
+   * @instance
+   * @function xp
+   * @memberof yarp.Character
+   */
+  get xp() {
+    return this._xp;
+  }
+
+  /**
+   * Set the xp value for the player
+   * @instance
+   * @function xp
+   * @memberof yarp.Character
+   * @param {Number} value XP value
+   */
+  set xp(value) {
+    if (value > 1000000000) {
+      value = 1000000000;
+    } else if (value &lt; 0) {
+      value = 0;
+    }
+    this._xp = value;
+    let player = this.player;
+    if (player) {
+      player.setVariable('PLAYER_XP', this.xp);
+    }
+  }
+
+  /**
+   * Get the heading value
+   * @instance
+   * @function heading
+   * @memberof yarp.Character
+   */
+  get heading() {
+    return this._heading;
+  }
+
+  /**
+   * Set the heading value for the player
+   * @instance
+   * @function heading
+   * @memberof yarp.Character
+   * @param {Number} value Heading value
+   */
+  set heading(value) {
+    this._heading = value;
+    let player = this.player;
+    if (player) {
+      player.heading = this.heading;
+    }
+  }
+
+  /**
+   * Get the position value
+   * @instance
+   * @function position
+   * @memberof yarp.Character
+   */
+  get position() {
+    return this._position;
+  }
+
+  /**
+   * Set the position value for the player
+   * @instance
+   * @function position
+   * @memberof yarp.Character
+   * @param {Number} value Position value
+   */
+  set position(value) {
+    this._position = value;
+    let player = this.player;
+    if (player) {
+      player.position = this.position;
+    }
+  }
+
+  /**
+   * Update character last login.
+   * @instance
+   * @function updateLastLogin
+   * @memberof yarp.Character
+   * @param {String} ip Character ip.
+   */
+  updateLastLogin(ip) {
+    this.lastLogin = `${ip} ${yarp.utils.getTimestamp(new Date())}`;
+  }
+
+  /**
+   * Try wallet payment.
+   * @instance
+   * @function tryWalletPayment
+   * @memberof yarp.Character
+   * @param {Number} value Amount to pay.
+   * @return {Boolean} Operation success/fail.
+   */
+  tryWalletPayment(value) {
+    if (this.wallet-value >= 0) {
+      this.wallet -= value;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Try bank payment.
+   * @instance
+   * @function tryBankPayment
+   * @memberof yarp.Character
+   * @param {Number} value Amount to pay.
+   * @return {Boolean} Operation success/fail.
+   */
+  tryBankPayment(value) {
+    if (this.bank-value >= 0) {
+      this.bank -= value;
+      new yarp.Transaction({
+        type: 'Payment',
+        value: value,
+        source: this.id,
+      }).save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Try full payment.
+   * @instance
+   * @function tryFullPayment
+   * @memberof yarp.Character
+   * @param {Number} value Amount to pay.
+   * @return {Boolean} Operation success/fail.
+   */
+  tryFullPayment(value) {
+    if (this.tryWalletPayment(value)) {
+      return true;
+    } else {
+      return this.tryBankPayment(value);
+    }
+    return false;
+  }
+
+  /**
+   * Try deposit.
+   * @instance
+   * @function tryDeposit
+   * @memberof yarp.Character
+   * @param {Number} value Amount to deposit.
+   * @return {Boolean} Operation success/fail.
+   */
+  tryDeposit(value) {
+    if (this.wallet-value >= 0) {
+      this.wallet -= value;
+      this.bank += value;
+      new yarp.Transaction({
+        type: 'Deposit',
+        value: value,
+        source: this.id,
+      }).save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Try withdraw.
+   * @instance
+   * @function tryWithdraw
+   * @memberof yarp.Character
+   * @param {Number} value Amount to withdraw.
+   * @return {Boolean} Operation success/fail.
+   */
+  tryWithdraw(value) {
+    if (this.bank-value >= 0) {
+      this.bank -= value;
+      this.wallet += value;
+      new yarp.Transaction({
+        type: 'Withdraw',
+        value: value,
+        source: this.id,
+      }).save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Try transfer.
+   * @instance
+   * @function tryTransfer
+   * @memberof yarp.Character
+   * @param {String} target Target character name.
+   * @param {Number} value Amount to transfer.
+   * @return {Boolean} Operation success/fail.
+   */
+  tryTransfer(target, value) {
+    if (this.bank-value >= 0) {
+      this.bank -= value;
+      target.bank += value;
+      new yarp.Transaction({
+        type: 'Transfer',
+        value: value,
+        source: this.id,
+        target: target.id,
+      }).save();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Give an item.
+   * @instance
+   * @function giveItem
+   * @memberof yarp.Character
+   * @param {Object} item Item to give.
+   * @param {Number} amount Amount to give.
+   * @return {Boolean} Operation success/fail.
+   */
+  giveItem(item, amount) {
+    if ((typeof item) === 'string') item = yarp.items[item];
+    if (this.weight + item.weight &lt; yarp.variables['Max Weight'].value) {
+      if (this.inventory[item.id] != null) {
+        this.inventory[item.id] = this.inventory[item.id] + amount;
+      } else {
+        this.inventory[item.id] = amount;
+      }
+      this.weight = yarp.utils.round(this.weight + (amount * item.weight), 1);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Take an item.
+   * @instance
+   * @function takeItem
+   * @memberof yarp.Character
+   * @param {Object} item Item to take.
+   * @param {Number} amount Amount to take.
+   * @return {Boolean} Operation success/fail.
+   */
+  takeItem(item, amount) {
+    if ((typeof item) === 'string') item = yarp.items[item];
+    if (this.inventory[item.id] != null) {
+      if (this.inventory[item.id]-amount >= 0) {
+        this.inventory[item.id] = this.inventory[item.id]-amount;
+        this.weight = yarp.utils.round(this.weight-(amount * item.weight), 1);
+        if (this.inventory[item.id] &lt;= 0) {
+          delete this.inventory[item.id];
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if has an item.
+   * @instance
+   * @function takeItem
+   * @memberof yarp.Character
+   * @param {String} id Item id.
+   * @return {Boolean} If has or not the item.
+   */
+  hasItem(id) {
+    return (this.inventory[id] != null &amp;&amp; this.inventory[id] > 0);
+  }
+
+  /**
+   * Check if has all items.
+   * @instance
+   * @function hasItems
+   * @memberof yarp.Character
+   * @param {Array&lt;String>} items Items id.
+   * @return {Boolean} If has or not all items.
+   */
+  hasItems(items) {
+    for (let i = 0; i &lt; items.length; i++) {
+      if (!this.hasItems(items[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Give a weapon.
+   * @instance
+   * @function giveWeapon
+   * @memberof yarp.Character
+   * @param {Object} weapon Weapon object or id.
+   * @param {Number} amount Amount of bullets.
+   * @fires equipWeapon
+   */
+  giveWeapon(weapon, amount) {
+    if ((typeof weapon) === 'string') weapon = yarp.weapons[weapon];
+    if (!this.hasWeapon(weapon.id)) {
+      this.weapons[weapon.id] = 0;
+    }
+    if (!amount) amount = 0;
+    this.weapons[weapon.id] += amount;
+    this.player.giveWeapon(mp.joaat(weapon.id), amount);
+    this.player.call('equipWeapon', [JSON.stringify(weapon)]);
+  }
+
+  /**
+   * Take a weapon.
+   * @instance
+   * @function takeWeapon
+   * @memberof yarp.Character
+   * @param {Object} weapon Weapon object or id.
+   * @fires unequipWeapon
+   */
+  takeWeapon(weapon) {
+    if ((typeof weapon) === 'string') weapon = yarp.weapons[weapon];
+    if (this.hasWeapon(weapon.id)) {
+      this.weapons.splice(this.weapons.indexOf(weapon.id), 1);
+    }
+    let player = this.player;
+    player.call('takeWeapon', [weapon.id]);
+    player.call('unequipWeapon', [JSON.stringify(weapon)]);
+  }
+
+  /**
+   * Take weapon ammo.
+   * @instance
+   * @function takeWeaponAmmo
+   * @memberof yarp.Character
+   * @param {String} id Weapon id.
+   * @param {Number} amount Amount of bullets.
+   */
+  takeWeaponAmmo(id, amount) {
+    if (this.hasWeapon(id)) {
+      this.weapons[id] -= amount;
+      if (this.weapons[id] &lt;= 0) {
+        this.weapons[id] = 0;
+      }
+      let player = this.player;
+      player.call('setWeaponAmmo', [id, this.weapons[id]]);
+    }
+  }
+
+  /**
+   * Give weapon ammo.
+   * @instance
+   * @function giveWeaponAmmo
+   * @memberof yarp.Character
+   * @param {String} id Weapon id.
+   * @param {Number} amount Amount of bullets.
+   */
+  giveWeaponAmmo(id, amount) {
+    if (this.hasWeapon(id)) {
+      this.weapons[id] += amount;
+      let player = this.player;
+      player.call('setWeaponAmmo', [id, this.weapons[id]]);
+    }
+  }
+
+  /**
+   * Take ammo.
+   * @instance
+   * @function takeAmmo
+   * @memberof yarp.Character
+   * @param {String} id Ammo id.
+   * @param {Number} amount Amount of bullets.
+   */
+  takeAmmo(id, amount) {
+    let weaponId = id.replace('AMMO_', 'WEAPON_');
+    if (this.hasWeapon(weaponId)) {
+      this.weapons[weaponId] -= amount;
+      if (this.weapons[weaponId] &lt;= 0) {
+        this.weapons[weaponId] = 0;
+      }
+      let player = this.player;
+      player.call('setWeaponAmmo', [weaponId, this.weapons[weaponId]]);
+    }
+  }
+
+  /**
+   * Give ammo.
+   * @instance
+   * @function giveAmmo
+   * @memberof yarp.Character
+   * @param {String} id Ammo id.
+   * @param {Number} amount Amount of bullets.
+   */
+  giveAmmo(id, amount) {
+    let weaponId = id.replace('AMMO_', 'WEAPON_');
+    if (this.hasWeapon(weaponId)) {
+      this.weapons[weaponId] += amount;
+      let player = this.player;
+      player.call('setWeaponAmmo', [weaponId, this.weapons[weaponId]]);
+    }
+  }
+
+  /**
+   * Check if has a weapon.
+   * @instance
+   * @function hasWeapon
+   * @memberof yarp.Character
+   * @param {String} id Weapon id.
+   * @return {Boolean} If has or not the weapon.
+   */
+  hasWeapon(id) {
+    return (this.weapons[id] != null);
+  }
+
+  /**
+   * Check if has all weapons.
+   * @instance
+   * @function hasWeapons
+   * @memberof yarp.Character
+   * @param {Array&lt;String>} weapons Weapons id.
+   * @return {Boolean} If has or not all the weapons.
+   */
+  hasWeapons(weapons) {
+    for (let i = 0; i &lt; weapons.length; i++) {
+      if (!this.hasWeapon(weapons[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Give a group.
+   * @instance
+   * @function giveGroup
+   * @memberof yarp.Character
+   * @param {String} group Group id.
+   * @return {Boolean} Operation success/fail.
+   * @fires characterJoinedGroup
+   */
+  giveGroup(group) {
+    if (this.groups.indexOf(group) == -1) {
+      if (yarp.groups[group]) {
+        let type = yarp.groups[group].type;
+        if (type) {
+          let sameType = this.getGroupByType(type);
+          if (sameType) {
+            this.takeGroup(sameType);
+          }
+        }
+        let player = this.player;
+        if (player) {
+          yarp.groups[group].enter(player);
+          mp.events.call('characterJoinedGroup', player, this, group);
+        }
+      }
+      this.groups.push(group);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Take a group.
+   * @instance
+   * @function takeGroup
+   * @memberof yarp.Character
+   * @param {String} group Group id.
+   * @return {Boolean} Operation success/fail.
+   * @fires characterLeftGroup
+   */
+  takeGroup(group) {
+    if (this.groups.indexOf(group) > -1) {
+      if (yarp.groups[group]) {
+        let player = this.player;
+        if (player) {
+          yarp.groups[group].leave(player);
+          mp.events.call('characterLeftGroup', player, this, group);
+        }
+      }
+      this.groups.splice(this.groups.indexOf(group), 1);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get group by type.
+   * @instance
+   * @function getGroupByType
+   * @memberof yarp.Character
+   * @param {String} type Group type.
+   * @return {String} Group id.
+   */
+  getGroupByType(type) {
+    for (let id of this.groups) {
+      let group = yarp.groups[id];
+      if (group != null) {
+        if (group.type == type) {
+          return id;
+        }
+      }
+    }
+  }
+
+  /**
+   * Get groups by types.
+   * @instance
+   * @function getGroupByTypes
+   * @memberof yarp.Character
+   * @param {Array&lt;String>} types Group types.
+   * @return {Array&lt;String>} Group ids.
+   */
+  getGroupsByTypes(types) {
+    let groups = [];
+    for (let id of this.groups) {
+      let group = yarp.groups[id];
+      if (group != null) {
+        if (types.indexOf(group.type) >= 0) {
+          groups.push(group);
+        }
+      }
+    }
+    return groups;
+  }
+
+  /**
+   * Check if has group.
+   * @instance
+   * @function hasGroup
+   * @memberof yarp.Character
+   * @param {String} id Group id.
+   * @return {Boolean} If has or not the group.
+   */
+  hasGroup(id) {
+   return (this.groups.indexOf(id) > -1);
+  }
+
+  /**
+   * Check if has all groups.
+   * @instance
+   * @function hasGroup
+   * @memberof yarp.Character
+   * @param {Array&lt;String>} groups Group ids.
+   * @return {Boolean} If has or not all the groups.
+   */
+  hasGroups(groups) {
+    for (let i = 0; i &lt; groups.length; i++) {
+      if (!this.hasGroup(groups[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Check if has permission.
+   * @instance
+   * @function hasPermission
+   * @memberof yarp.Character
+   * @param {String} permission Permission.
+   * @return {Boolean} If has or not the permission.
+   */
+  hasPermission(permission) {
+    let result = false;
+    let removed = false;
+    let readd = false;
+    if (permission[0] == '#') {
+      let parts = permission.split('.');
+      let item = this.inventory[parts[0].slice(1, parts[0].length)];
+      let operation = parts[1][0];
+      let value = Number(parts[1].slice(1, parts[1].length));
+      switch (operation) {
+        case '>':
+        result = (item > value);
+        break;
+        case '&lt;':
+        result = (item &lt; value);
+        break;
+        default:
+        result = (item == value);
+        break;
+      }
+    } else if (permission[0] == '@') {
+      let parts = permission.split('.');
+      let skill = this.skills[parts[0].slice(1, parts[0].length)];
+      let operation = parts[1][0];
+      let value = Number(parts[1].slice(1, parts[1].length));
+      switch (operation) {
+        case '>':
+          result = (skill > value);
+          break;
+        case '&lt;':
+          result = (skill &lt; value);
+          break;
+        default:
+          result = (skill == value);
+          break;
+      }
+    } else if (permission[0] == '$') {
+      let parts = permission.split('.');
+      let param = this[parts[0].slice(1, parts[0].length)];
+      let operation = parts[1][0];
+      let value = Number(parts[1].slice(1, parts[1].length));
+      switch (operation) {
+        case '>':
+          result = (param > value);
+          break;
+        case '&lt;':
+          result = (param &lt; value);
+          break;
+        default:
+          result = (param == value);
+          break;
+      }
+    } else {
+      for (let id of this.groups) {
+        let group = yarp.groups[id];
+        if (group != null) {
+          if (group.permissions.indexOf('*') > -1) {
+            result = true;
+          }
+          if (group.permissions.indexOf(permission) > -1) {
+            result = true;
+          }
+          if (group.permissions.indexOf(`-${permission}`) > -1) {
+            removed = true;
+          }
+          if (group.permissions.indexOf(`+${permission}`) > -1) {
+            readd = true;
+          }
+          if ((!result) || (!readd &amp;&amp; removed)) {
+            for (let inh of group.inherits) {
+              let child = yarp.groups[inh];
+              if (child.permissions.indexOf('*') > -1) {
+                result = true;
+              }
+              if (child.permissions.indexOf(permission) > -1) {
+                result = true;
+              }
+              if (child.permissions.indexOf(`-${permission}`) > -1) {
+                removed = true;
+              }
+              if (child.permissions.indexOf(`+${permission}`) > -1) {
+                readd = true;
+              }
+            }
+          }
+        }
+      }
+    }
+    if (removed &amp;&amp; !readd) {
+      result = false;
+    }
+    return result;
+  }
+
+  /**
+   * Check if has all permissions.
+   * @instance
+   * @function hasPermission
+   * @memberof yarp.Character
+   * @param {Array&lt;String>} permissions Permissions.
+   * @return {Boolean} If has or not all permissions.
+   */
+  hasPermissions(permissions) {
+    for (let i = 0; i &lt; permissions.length; i++) {
+      if (!this.hasPermission(permissions[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
+module.exports = Character;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Transaction.Transaction.html">Transaction</a></li><li><a href="yarp.Blip.html">Blip</a></li><li><a href="yarp.Blip.Blip.html">Blip</a></li><li><a href="yarp.Character.html">Character</a></li><li><a href="yarp.Character.Character.html">Character</a></li><li><a href="yarp.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Checkpoint.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Colshape.html">Colshape</a></li><li><a href="yarp.Colshape.Colshape.html">Colshape</a></li><li><a href="yarp.Command.html">Command</a></li><li><a href="yarp.Command.Command.html">Command</a></li><li><a href="yarp.Door.html">Door</a></li><li><a href="yarp.Door.Door.html">Door</a></li><li><a href="yarp.Event.html">Event</a></li><li><a href="yarp.Event.Event.html">Event</a></li><li><a href="yarp.GMObject.html">GMObject</a></li><li><a href="yarp.GMObject.GMObject.html">GMObject</a></li><li><a href="yarp.Group.html">Group</a></li><li><a href="yarp.Group.Group.html">Group</a></li><li><a href="yarp.Hotkey.html">Hotkey</a></li><li><a href="yarp.Hotkey.Hotkey.html">Hotkey</a></li><li><a href="yarp.Item.html">Item</a></li><li><a href="yarp.Item.Item.html">Item</a></li><li><a href="yarp.Label.html">Label</a></li><li><a href="yarp.Label.Label.html">Label</a></li><li><a href="yarp.Location.html">Location</a></li><li><a href="yarp.Location.Location.html">Location</a></li><li><a href="yarp.Marker.html">Marker</a></li><li><a href="yarp.Marker.Marker.html">Marker</a></li><li><a href="yarp.Menu.html">Menu</a></li><li><a href="yarp.Npc.html">Npc</a></li><li><a href="yarp.Npc.Menu.html">Menu</a></li><li><a href="yarp.Npc.Npc.html">Npc</a></li><li><a href="yarp.Pool.html">Pool</a></li><li><a href="yarp.Pool.Pool.html">Pool</a></li><li><a href="yarp.Prop.html">Prop</a></li><li><a href="yarp.Prop.Prop.html">Prop</a></li><li><a href="yarp.Transaction.html">Transaction</a></li><li><a href="yarp.User.html">User</a></li><li><a href="yarp.User.User.html">User</a></li><li><a href="yarp.Variable.html">Variable</a></li><li><a href="yarp.Variable.Variable.html">Variable</a></li><li><a href="yarp.Vehicle.html">Vehicle</a></li><li><a href="yarp.Vehicle.Vehicle.html">Vehicle</a></li><li><a href="yarp.Weapon.html">Weapon</a></li><li><a href="yarp.Weapon.Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="client.browser.html#.event:browserCreated">browserCreated</a></li><li><a href="client.browser.html#.event:browserDomReady">browserDomReady</a></li><li><a href="client.browser.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="client.browser.html#.event:createBrowser">createBrowser</a></li><li><a href="client.browser.html#.event:toggleChat">toggleChat</a></li><li><a href="client.character.html#.event:acceptCharacterCreation">acceptCharacterCreation</a></li><li><a href="client.character.html#.event:cameraPointTo">cameraPointTo</a></li><li><a href="client.character.html#.event:cancelCharacterCreation">cancelCharacterCreation</a></li><li><a href="client.character.html#.event:characterCreatedSuccessfully">characterCreatedSuccessfully</a></li><li><a href="client.character.html#.event:characterNameDuplicated">characterNameDuplicated</a></li><li><a href="client.character.html#.event:loadCharacter">loadCharacter</a></li><li><a href="client.character.html#.event:rotateCharacter">rotateCharacter</a></li><li><a href="client.character.html#.event:showCharacterCreationMenu">showCharacterCreationMenu</a></li><li><a href="client.character.html#.event:showPlayerCharacters">showPlayerCharacters</a></li><li><a href="client.character.html#.event:updatePlayerCreation">updatePlayerCreation</a></li><li><a href="client.character.html#.event:updatePlayerCustomSkin">updatePlayerCustomSkin</a></li><li><a href="client.character.html#.event:updatePlayerModel">updatePlayerModel</a></li><li><a href="client.checkpoint.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="client.checkpoint.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="client.colshape.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="client.colshape.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="client.command.html#.event:render">render</a></li><li><a href="client.command.html#.event:toggleCamdir">toggleCamdir</a></li><li><a href="client.command.html#.event:toggleCharpos">toggleCharpos</a></li><li><a href="client.command.html#.event:toggleNoclip">toggleNoclip</a></li><li><a href="client.gamemode.html#.event:playerBindKey">playerBindKey</a></li><li><a href="client.gamemode.html#.event:playerCloseDoor">playerCloseDoor</a></li><li><a href="client.gamemode.html#.event:playerOpenDoor">playerOpenDoor</a></li><li><a href="client.gamemode.html#.event:playerUnbindKey">playerUnbindKey</a></li><li><a href="client.gamemode.html#.event:runClientCode">runClientCode</a></li><li><a href="client.gamemode.html#.event:runServerCode">runServerCode</a></li><li><a href="client.gamemode.html#.event:setWorldTime">setWorldTime</a></li><li><a href="client.menu.html#.event:callInventoryOption">callInventoryOption</a></li><li><a href="client.menu.html#.event:executeBankOperation">executeBankOperation</a></li><li><a href="client.menu.html#.event:loadBankBalance">loadBankBalance</a></li><li><a href="client.menu.html#.event:purchaseSaleItem">purchaseSaleItem</a></li><li><a href="client.menu.html#.event:unbindToggleChat">unbindToggleChat</a></li><li><a href="client.menu.html#.event:updateBankAccountMoney">updateBankAccountMoney</a></li><li><a href="client.menu.html#.event:verifyLogin">verifyLogin</a></li><li><a href="client.nativeui.html#.event:createMenu">createMenu</a></li><li><a href="client.player.html#.event:playerChat">playerChat</a></li><li><a href="client.player.html#.event:playerCommand">playerCommand</a></li><li><a href="client.player.html#.event:playerDeath">playerDeath</a></li><li><a href="client.player.html#.event:playerJoin">playerJoin</a></li><li><a href="client.player.html#.event:playerQuit">playerQuit</a></li><li><a href="client.player.html#.event:playerReady">playerReady</a></li><li><a href="client.player.html#.event:playerResurrect">playerResurrect</a></li><li><a href="client.player.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="client.player.html#.event:playerSpawn">playerSpawn</a></li><li><a href="client.render.html#.event:clearHelpText">clearHelpText</a></li><li><a href="client.render.html#.event:displayHelpText">displayHelpText</a></li><li><a href="client.render.html#.event:render">render</a></li><li><a href="client.stream.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="client.vehicle.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="client.vehicle.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="client.waypoint.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="client.waypoint.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="client.weapon.html#.event:equipWeapon">equipWeapon</a></li><li><a href="client.weapon.html#.event:unequipAllWeapons">unequipAllWeapons</a></li><li><a href="client.weapon.html#.event:unequipWeapon">unequipWeapon</a></li><li><a href="server.character.html#.event:changeCharacterModel">changeCharacterModel</a></li><li><a href="server.character.html#.event:createCharacter">createCharacter</a></li><li><a href="server.character.html#.event:loadCharacter">loadCharacter</a></li><li><a href="server.character.html#.event:setCharacterIntoCreator">setCharacterIntoCreator</a></li><li><a href="server.checkpoint.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="server.checkpoint.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="server.colshape.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="server.colshape.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="server.entity.html#.event:entityCreated">entityCreated</a></li><li><a href="server.entity.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="server.entity.html#.event:entityModelChange">entityModelChange</a></li><li><a href="server.gamemode.html#.event:playerBoundKeyPressed">playerBoundKeyPressed</a></li><li><a href="server.gamemode.html#.event:runServerCode">runServerCode</a></li><li><a href="server.item.html#.event:restoreHunger">restoreHunger</a></li><li><a href="server.item.html#.event:restoreThirst">restoreThirst</a></li><li><a href="server.menu.html#.event:callInventoryOption">callInventoryOption</a></li><li><a href="server.menu.html#.event:executeBankOperation">executeBankOperation</a></li><li><a href="server.menu.html#.event:loadBankBalance">loadBankBalance</a></li><li><a href="server.menu.html#.event:purchaseSaleItem">purchaseSaleItem</a></li><li><a href="server.menu.html#.event:unbindToggleChat">unbindToggleChat</a></li><li><a href="server.menu.html#.event:verifyLogin">verifyLogin</a></li><li><a href="server.nativui.html#.event:menuCheckboxChange">menuCheckboxChange</a></li><li><a href="server.nativui.html#.event:menuClose">menuClose</a></li><li><a href="server.nativui.html#.event:menuIndexChage">menuIndexChage</a></li><li><a href="server.nativui.html#.event:menuItemSelect">menuItemSelect</a></li><li><a href="server.nativui.html#.event:menuListChange">menuListChange</a></li><li><a href="server.nativui.html#.event:menuSliderChange">menuSliderChange</a></li><li><a href="server.player.html#.event:playerChat">playerChat</a></li><li><a href="server.player.html#.event:playerCommand">playerCommand</a></li><li><a href="server.player.html#.event:playerDeath">playerDeath</a></li><li><a href="server.player.html#.event:playerJoin">playerJoin</a></li><li><a href="server.player.html#.event:playerQuit">playerQuit</a></li><li><a href="server.player.html#.event:playerReady">playerReady</a></li><li><a href="server.player.html#.event:playerSpawn">playerSpawn</a></li><li><a href="server.player.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="server.player.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="server.stream.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="server.stream.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="server.vehicle.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="server.vehicle.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="server.vehicle.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="server.vehicle.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="server.vehicle.html#.event:trailerAttached">trailerAttached</a></li><li><a href="server.vehicle.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="server.vehicle.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="server.vehicle.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="server.vehicle.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="server.waypoint.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="server.waypoint.html#.event:playerReachWaypoint">playerReachWaypoint</a></li></ul><h3>Namespaces</h3><ul><li><a href="client.html">client</a></li><li><a href="client.browser.html">client.browser</a></li><li><a href="client.character.html">client.character</a></li><li><a href="client.checkpoint.html">client.checkpoint</a></li><li><a href="client.colshape.html">client.colshape</a></li><li><a href="client.command.html">client.command</a></li><li><a href="client.gamemode.html">client.gamemode</a></li><li><a href="client.menu.html">client.menu</a></li><li><a href="client.player.html">client.player</a></li><li><a href="client.render.html">client.render</a></li><li><a href="client.stream.html">client.stream</a></li><li><a href="client.vehicle.html">client.vehicle</a></li><li><a href="client.waypoint.html">client.waypoint</a></li><li><a href="client.weapon.html">client.weapon</a></li><li><a href="client.yarp.nativeui.html">nativeui</a></li><li><a href="client.yarp.utils.html">utils</a></li><li><a href="server.html">server</a></li><li><a href="server.character.html">server.character</a></li><li><a href="server.checkpoint.html">server.checkpoint</a></li><li><a href="server.colshape.html">server.colshape</a></li><li><a href="server.entity.html">server.entity</a></li><li><a href="server.gamemode.html">server.gamemode</a></li><li><a href="server.item.html">server.item</a></li><li><a href="server.menu.html">server.menu</a></li><li><a href="server.nativui.html">server.nativui</a></li><li><a href="server.player.html">server.player</a></li><li><a href="server.stream.html">server.stream</a></li><li><a href="server.vehicle.html">server.vehicle</a></li><li><a href="server.waypoint.html">server.waypoint</a></li><li><a href="server.world.html">server.world</a></li><li><a href="server.yarp.utils.html">utils</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 15 2018 23:58:01 GMT-0300 (Brasilia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
