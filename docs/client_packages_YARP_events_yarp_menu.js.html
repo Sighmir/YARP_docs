@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: client_packages/YARP/events/yarp/menu.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: client_packages/YARP/events/yarp/menu.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+/**
+* Menu events
+*/
+
+yarp.client.menuAddItem = (menuId, item) => {
+    let menuItem = [item.displayText, item.data,
+        yarp.utils.client.default(item.caption, ''),
+        yarp.utils.client.default(item.badge, NaN),
+        new NativeMenu.Color(...yarp.utils.client.default(item.textColor, [255, 255, 255, 240])),
+        new NativeMenu.Color(...yarp.utils.client.default(item.backgroundColor, [0, 0, 0, 120])),
+        new NativeMenu.Color(...yarp.utils.client.default(item.hoverTextColor, [20, 0, 0, 240])),
+        new NativeMenu.Color(...yarp.utils.client.default(item.hoverBackgroundColor, [255, 255, 255, 170])),
+    ];
+    switch (item.type) {
+        case 'checkbox':
+            menuItem = new NativeMenu.CheckboxMenuItem(...menuItem);
+            break;
+        case 'list':
+            menuItem = [...menuItem.slice(0, 2),
+                yarp.utils.client.default(item.defaultIndex, 0),
+                ...menuItem.slice(2, 8),
+            ];
+            menuItem = new NativeMenu.ListMenuItem(...menuItem);
+            break;
+        case 'slider':
+            menuItem = [menuItem[0],
+                yarp.utils.client.default(item.min, 1),
+                yarp.utils.client.default(item.max, 1),
+                yarp.utils.client.default(item.step, 1),
+                ...menuItem.slice(1, 8),
+            ];
+            menuItem = new NativeMenu.SliderMenuItem(...menuItem);
+            break;
+        case 'close':
+            menuItem = new NativeMenu.CloseMenuItem(...menuItem);
+            break;
+        case 'submenu':
+            menuItem = new NativeMenu.SubMenuItem(...menuItem);
+            yarp.menus[item.id] = menuItem;
+            for (let subitem of item.data) {
+                yarp.client.menuAddItem(item.id, subitem);
+            }
+            break;
+        default:
+            menuItem = new NativeMenu.TextMenuItem(...menuItem);
+            break;
+    }
+    if (menuItem.addOnClickEvent) {
+        menuItem.addOnClickEvent({
+            trigger: (data) => {
+                yarp.server.menuItemClicked(menuId, item.type, data);
+            },
+        });
+    }
+    if (menuItem.addOnSelectEvent) {
+        menuItem.addOnSelectEvent({
+            trigger: (data) => {
+                yarp.server.menuItemSelected(menuId, item.type, data);
+            },
+        });
+    }
+    if (menuItem.addOnChangeEvent) {
+        menuItem.addOnChangeEvent({
+            trigger: (data) => {
+                yarp.server.menuItemChanged(menuId, item.type, data);
+            },
+        });
+    }
+    yarp.menus[menuId].add(menuItem);
+};
+
+yarp.client.createMenu = (menuId, options) => {
+    yarp.menus[menuId] = new NativeMenu.MainMenu(options.title, false);
+    yarp.menus[menuId].offset = yarp.utils.client.default(options.offset, [0, 0]);
+    if (options.texture) {
+        yarp.menus[menuId].setTitleTexture(...options.texture);
+    }
+    for (let item of options.data) {
+        yarp.client.menuAddItem(menuId, item);
+    }
+    yarp.menus[menuId].setEventMenu({
+        click: (data) => {
+            yarp.server.menuClicked(menuId, data);
+        },
+        select: (data) => {
+            yarp.server.menuSelected(menuId, data);
+        },
+    });
+};
+
+
+yarp.client.toggleMenu = (menuId) => {
+    if (yarp.menus[menuId].isVisible) {
+        mp.gui.chat.show(true);
+        yarp.menus[menuId].close();
+    } else {
+        mp.gui.chat.show(false);
+        mp.gui.cursor.visible = false;
+        yarp.menus[menuId].open();
+    }
+};
+
+yarp.client.openMenu = (menuId) => {
+    yarp.menus[menuId].open();
+    mp.gui.cursor.visible = false;
+    mp.gui.chat.show(false);
+};
+
+yarp.client.closeMenu = (menuId) => {
+    yarp.menus[menuId].close();
+    mp.gui.chat.show(true);
+};
+
+yarp.client.menuAddItems = (menuId, items) => {
+    for (item of items) {
+        yarp.client.menuAddItem(menuId, item);
+    }
+};
+
+mp.events.add('render', () => {
+    for (let menuId in yarp.menus) {
+        if (yarp.menus.hasOwnProperty(menuId)) {
+            let menu = yarp.menus[menuId];
+            if (menu.offset) menu.render(...menu.offset);
+        }
+    }
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GMObject.html">GMObject</a></li><li><a href="GMProxy.html">GMProxy</a></li><li><a href="Transaction.Transaction.html">Transaction</a></li><li><a href="yarp.Blip.html">Blip</a></li><li><a href="yarp.Blip.Blip.html">Blip</a></li><li><a href="yarp.Character.html">Character</a></li><li><a href="yarp.Character.Character.html">Character</a></li><li><a href="yarp.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Checkpoint.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Colshape.html">Colshape</a></li><li><a href="yarp.Colshape.Colshape.html">Colshape</a></li><li><a href="yarp.Command.html">Command</a></li><li><a href="yarp.Command.Command.html">Command</a></li><li><a href="yarp.Door.html">Door</a></li><li><a href="yarp.Door.Door.html">Door</a></li><li><a href="yarp.Event.html">Event</a></li><li><a href="yarp.Event.Event.html">Event</a></li><li><a href="yarp.Group.html">Group</a></li><li><a href="yarp.Group.Group.html">Group</a></li><li><a href="yarp.Hotkey.html">Hotkey</a></li><li><a href="yarp.Hotkey.Hotkey.html">Hotkey</a></li><li><a href="yarp.Item.html">Item</a></li><li><a href="yarp.Item.Item.html">Item</a></li><li><a href="yarp.Label.html">Label</a></li><li><a href="yarp.Label.Label.html">Label</a></li><li><a href="yarp.Location.html">Location</a></li><li><a href="yarp.Location.Location.html">Location</a></li><li><a href="yarp.Marker.html">Marker</a></li><li><a href="yarp.Marker.Marker.html">Marker</a></li><li><a href="yarp.Menu.html">Menu</a></li><li><a href="yarp.Menu.Menu.html">Menu</a></li><li><a href="yarp.Npc.html">Npc</a></li><li><a href="yarp.Npc.Npc.html">Npc</a></li><li><a href="yarp.Pool.html">Pool</a></li><li><a href="yarp.Pool.Pool.html">Pool</a></li><li><a href="yarp.Prop.html">Prop</a></li><li><a href="yarp.Prop.Prop.html">Prop</a></li><li><a href="yarp.Transaction.html">Transaction</a></li><li><a href="yarp.User.html">User</a></li><li><a href="yarp.User.User.html">User</a></li><li><a href="yarp.Variable.html">Variable</a></li><li><a href="yarp.Variable.Variable.html">Variable</a></li><li><a href="yarp.Vehicle.html">Vehicle</a></li><li><a href="yarp.Vehicle.Vehicle.html">Vehicle</a></li><li><a href="yarp.Weapon.html">Weapon</a></li><li><a href="yarp.Weapon.Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="yarp.server.html#.event:closeStoreMenu">closeStoreMenu</a></li><li><a href="yarp.server.html#.event:menuItemClicked">menuItemClicked</a></li><li><a href="yarp.server.html#.event:openStoreMenu">openStoreMenu</a></li></ul><h3>Namespaces</h3><ul><li><a href="client.player.html">client.player</a></li><li><a href="server.character.html">server.character</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li></ul><h3>Global</h3><ul><li><a href="global.html#camdir">camdir</a></li><li><a href="global.html#equiped">equiped</a></li><li><a href="global.html#exit">exit</a></li><li><a href="global.html#faceModel">faceModel</a></li><li><a href="global.html#keybinds">keybinds</a></li><li><a href="global.html#oldWallet">oldWallet</a></li><li><a href="global.html#utils">utils</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 22 2018 07:54:02 GMT-0300 (Brasilia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

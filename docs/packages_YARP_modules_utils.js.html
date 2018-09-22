@@ -29,19 +29,44 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 /**
  * Holds utility functions for the server.
- * @namespace server.yarp.utils
  */
 
-let utils = {};
+let utils = new yarp.Proxy('yarp:utils');
+
+/**
+ * Returns a random integer between min and max
+ * @instance
+ * @function default
+ * @memberof yarp.utils.server
+ * @param {Number} min Minimum value.
+ * @param {Number} max Random value.
+ * @return {Number} Random integer.
+ */
+utils.server.getRandomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+/**
+ * Returns first vaule or second value as default.
+ * @instance
+ * @function default
+ * @memberof yarp.utils.server
+ * @param {*} v Verified value.
+ * @param {*} d Default value if v is null.
+ * @return {*} v if it's not null, or d
+ */
+utils.server.default = (v, d) => {
+  return (v != null) ? v : d;
+};
 
 /**
  * Format dates to dd/mm/yy h:m:s.
  * @function getTimestamp
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Date} date new Date().
  * @return {String} The formatted date.
  */
-utils.getTimestamp = (date) => {
+utils.server.getTimestamp = (date) => {
   let dd = date.getDate();
   let mm = date.getMonth()+1; // January is 0!
   let yyyy = date.getFullYear();
@@ -61,36 +86,36 @@ utils.getTimestamp = (date) => {
 /**
  * Round numbers by the amount of decimals.
  * @function round
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Number} value Value to be rounded.
  * @param {Number} decimals How many decimals.
  * @return {Number} The rounded number.
  */
-utils.round = (value, decimals) => {
+utils.server.round = (value, decimals) => {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 };
 
 /**
  * Offset a Vector3.
  * @function vectorOffset
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Vector3} vector Vector3 to be offset.
  * @param {Vector3} offset Vector3 offset amount.
  * @return {Vector3} Offset Vector3.
  */
-utils.vectorOffset = (vector, offset) => {
+utils.server.vectorOffset = (vector, offset) => {
   return new mp.Vector3(vector.x+offset.x, vector.y+offset.y, vector.z+offset.z);
 };
 
 /**
  * Get the distance between two Vector3.
  * @function vectorDistance
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Vector3} vector1 First Vector3.
  * @param {Vector3} vector2 Second Vector3.
  * @return {Number} Distance between them.
  */
-utils.vectorDistance = (vector1, vector2) => {
+utils.server.vectorDistance = (vector1, vector2) => {
   let dx = vector1.x - vector2.x;
   let dy = vector1.y - vector2.y;
   let dz = vector1.z - vector2.z;
@@ -100,12 +125,12 @@ utils.vectorDistance = (vector1, vector2) => {
 /**
  * Generate a random string.
  * @function randomString
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Number} digits Amaount of symbols on the string.
  * @param {String} possible String with possible symbols.
  * @return {String} Randomly generated string.
  */
-utils.randomString = (digits, possible) => {
+utils.server.randomString = (digits, possible) => {
   let text = '';
   for (let i = 0; i &lt; digits; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -116,12 +141,12 @@ utils.randomString = (digits, possible) => {
 /**
  * Get substrings from string.
  * @function getSubstrings
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {String} string String to analyze.
  * @param {String} symbol Symbol the substrings will be inside.
  * @return {Array&lt;String>} Array of substrings.
  */
-utils.getSubstrings = (string, symbol) => {
+utils.server.getSubstrings = (string, symbol) => {
   let current;
   let pattern = new RegExp('\\'+symbol+'(.*?)'+'\\'+symbol, 'g');
   let result = [];
@@ -136,11 +161,11 @@ utils.getSubstrings = (string, symbol) => {
 /**
  * Get object patameters names
  * @function getParamNames
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Function} func The function to be analyzed.
  * @return {Array&lt;String>} Array of parameter names.
  */
-utils.getParamNames = (func) => {
+utils.server.getParamNames = (func) => {
   let STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
   let STRIP_DEFAULTS = / = [\s\S]*?\n/g;
   let ARGUMENT_NAMES = /([^\s,]+)/g;
@@ -160,7 +185,7 @@ utils.getParamNames = (func) => {
  * @param {Object} object The object to be analyzed.
  * @return {Object} Persistent data object.
  */
-utils.cleanData = (object) => {
+utils.server.cleanData = (object) => {
   let data = {};
   for (let key of Object.keys(object)) {
     if (key[0] == '_') {
@@ -173,11 +198,11 @@ utils.cleanData = (object) => {
 /**
  * Represents an object with a string
  * @function paramsToString
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Object} obj The object to be analyzed.
  * @return {String} Object representation in string.
  */
-utils.paramsToString = (obj) => {
+utils.server.paramsToString = (obj) => {
   let objP = '';
   if (typeof obj === 'string') {
     return '\''+obj+'\'';
@@ -186,7 +211,7 @@ utils.paramsToString = (obj) => {
   } else if (obj instanceof Array) {
     objP = '[';
     for (let o of obj) {
-      objP = objP+' '+utils.parseParams(o)+',';
+      objP = objP+' '+utils.server.parseParams(o)+',';
     }
     if (obj.length > 0) {
       objP = objP.slice(0, -1);
@@ -196,7 +221,7 @@ utils.paramsToString = (obj) => {
     objP = '{';
     for (let k in obj) {
       if (obj.hasOwnProperty(k)) {
-        objP = objP+' \''+k+'\': '+utils.parseParams(obj[k])+',';
+        objP = objP+' \''+k+'\': '+utils.server.parseParams(obj[k])+',';
       }
     }
     if (Object.keys(obj).length > 0) {
@@ -212,11 +237,11 @@ utils.paramsToString = (obj) => {
 /**
  * Returns the time in a set timezone.
  * @function getTimezoneDate
- * @memberof server.yarp.utils
+ * @memberof yarp.utils.server
  * @param {Number} timezone The timezone difference to GMT.
  * @return {Date} Timezone date.
  */
-utils.getTimezoneDate = (timezone) => {
+utils.server.getTimezoneDate = (timezone) => {
   let date = new Date();
   let h = date.getUTCHours() + timezone;
   let m = date.getUTCMinutes();
@@ -294,13 +319,13 @@ module.exports = utils;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Transaction.Transaction.html">Transaction</a></li><li><a href="yarp.Blip.html">Blip</a></li><li><a href="yarp.Blip.Blip.html">Blip</a></li><li><a href="yarp.Character.html">Character</a></li><li><a href="yarp.Character.Character.html">Character</a></li><li><a href="yarp.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Checkpoint.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Colshape.html">Colshape</a></li><li><a href="yarp.Colshape.Colshape.html">Colshape</a></li><li><a href="yarp.Command.html">Command</a></li><li><a href="yarp.Command.Command.html">Command</a></li><li><a href="yarp.Door.html">Door</a></li><li><a href="yarp.Door.Door.html">Door</a></li><li><a href="yarp.Event.html">Event</a></li><li><a href="yarp.Event.Event.html">Event</a></li><li><a href="yarp.GMObject.html">GMObject</a></li><li><a href="yarp.GMObject.GMObject.html">GMObject</a></li><li><a href="yarp.Group.html">Group</a></li><li><a href="yarp.Group.Group.html">Group</a></li><li><a href="yarp.Hotkey.html">Hotkey</a></li><li><a href="yarp.Hotkey.Hotkey.html">Hotkey</a></li><li><a href="yarp.Item.html">Item</a></li><li><a href="yarp.Item.Item.html">Item</a></li><li><a href="yarp.Label.html">Label</a></li><li><a href="yarp.Label.Label.html">Label</a></li><li><a href="yarp.Location.html">Location</a></li><li><a href="yarp.Location.Location.html">Location</a></li><li><a href="yarp.Marker.html">Marker</a></li><li><a href="yarp.Marker.Marker.html">Marker</a></li><li><a href="yarp.Menu.html">Menu</a></li><li><a href="yarp.Menu.Menu.html">Menu</a></li><li><a href="yarp.Npc.html">Npc</a></li><li><a href="yarp.Npc.Npc.html">Npc</a></li><li><a href="yarp.Pool.html">Pool</a></li><li><a href="yarp.Pool.Pool.html">Pool</a></li><li><a href="yarp.Prop.html">Prop</a></li><li><a href="yarp.Prop.Prop.html">Prop</a></li><li><a href="yarp.Transaction.html">Transaction</a></li><li><a href="yarp.User.html">User</a></li><li><a href="yarp.User.User.html">User</a></li><li><a href="yarp.Variable.html">Variable</a></li><li><a href="yarp.Variable.Variable.html">Variable</a></li><li><a href="yarp.Vehicle.html">Vehicle</a></li><li><a href="yarp.Vehicle.Vehicle.html">Vehicle</a></li><li><a href="yarp.Weapon.html">Weapon</a></li><li><a href="yarp.Weapon.Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="client.browser.html#.event:browserCreated">browserCreated</a></li><li><a href="client.browser.html#.event:browserDomReady">browserDomReady</a></li><li><a href="client.browser.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="client.browser.html#.event:createBrowser">createBrowser</a></li><li><a href="client.browser.html#.event:toggleChat">toggleChat</a></li><li><a href="client.character.html#.event:acceptCharacterCreation">acceptCharacterCreation</a></li><li><a href="client.character.html#.event:cameraPointTo">cameraPointTo</a></li><li><a href="client.character.html#.event:cancelCharacterCreation">cancelCharacterCreation</a></li><li><a href="client.character.html#.event:characterCreatedSuccessfully">characterCreatedSuccessfully</a></li><li><a href="client.character.html#.event:characterNameDuplicated">characterNameDuplicated</a></li><li><a href="client.character.html#.event:loadCharacter">loadCharacter</a></li><li><a href="client.character.html#.event:rotateCharacter">rotateCharacter</a></li><li><a href="client.character.html#.event:showCharacterCreationMenu">showCharacterCreationMenu</a></li><li><a href="client.character.html#.event:showPlayerCharacters">showPlayerCharacters</a></li><li><a href="client.character.html#.event:updatePlayerCreation">updatePlayerCreation</a></li><li><a href="client.character.html#.event:updatePlayerCustomSkin">updatePlayerCustomSkin</a></li><li><a href="client.character.html#.event:updatePlayerModel">updatePlayerModel</a></li><li><a href="client.checkpoint.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="client.checkpoint.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="client.colshape.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="client.colshape.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="client.command.html#.event:render">render</a></li><li><a href="client.command.html#.event:toggleCamdir">toggleCamdir</a></li><li><a href="client.command.html#.event:toggleCharpos">toggleCharpos</a></li><li><a href="client.command.html#.event:toggleNoclip">toggleNoclip</a></li><li><a href="client.gamemode.html#.event:playerBindKey">playerBindKey</a></li><li><a href="client.gamemode.html#.event:playerCloseDoor">playerCloseDoor</a></li><li><a href="client.gamemode.html#.event:playerOpenDoor">playerOpenDoor</a></li><li><a href="client.gamemode.html#.event:playerUnbindKey">playerUnbindKey</a></li><li><a href="client.gamemode.html#.event:runClientCode">runClientCode</a></li><li><a href="client.gamemode.html#.event:runServerCode">runServerCode</a></li><li><a href="client.gamemode.html#.event:setWorldTime">setWorldTime</a></li><li><a href="client.menu.html#.event:callInventoryOption">callInventoryOption</a></li><li><a href="client.menu.html#.event:executeBankOperation">executeBankOperation</a></li><li><a href="client.menu.html#.event:loadBankBalance">loadBankBalance</a></li><li><a href="client.menu.html#.event:purchaseSaleItem">purchaseSaleItem</a></li><li><a href="client.menu.html#.event:unbindToggleChat">unbindToggleChat</a></li><li><a href="client.menu.html#.event:updateBankAccountMoney">updateBankAccountMoney</a></li><li><a href="client.menu.html#.event:verifyLogin">verifyLogin</a></li><li><a href="client.nativeui.html#.event:createMenu">createMenu</a></li><li><a href="client.player.html#.event:playerChat">playerChat</a></li><li><a href="client.player.html#.event:playerCommand">playerCommand</a></li><li><a href="client.player.html#.event:playerDeath">playerDeath</a></li><li><a href="client.player.html#.event:playerJoin">playerJoin</a></li><li><a href="client.player.html#.event:playerQuit">playerQuit</a></li><li><a href="client.player.html#.event:playerReady">playerReady</a></li><li><a href="client.player.html#.event:playerResurrect">playerResurrect</a></li><li><a href="client.player.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="client.player.html#.event:playerSpawn">playerSpawn</a></li><li><a href="client.render.html#.event:clearHelpText">clearHelpText</a></li><li><a href="client.render.html#.event:displayHelpText">displayHelpText</a></li><li><a href="client.render.html#.event:render">render</a></li><li><a href="client.stream.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="client.vehicle.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="client.vehicle.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="client.waypoint.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="client.waypoint.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="client.weapon.html#.event:equipWeapon">equipWeapon</a></li><li><a href="client.weapon.html#.event:unequipAllWeapons">unequipAllWeapons</a></li><li><a href="client.weapon.html#.event:unequipWeapon">unequipWeapon</a></li><li><a href="features.common.html#.event:menuItemSelect">menuItemSelect</a></li><li><a href="server.character.html#.event:changeCharacterModel">changeCharacterModel</a></li><li><a href="server.character.html#.event:createCharacter">createCharacter</a></li><li><a href="server.character.html#.event:loadCharacter">loadCharacter</a></li><li><a href="server.character.html#.event:setCharacterIntoCreator">setCharacterIntoCreator</a></li><li><a href="server.checkpoint.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="server.checkpoint.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="server.colshape.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="server.colshape.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="server.entity.html#.event:entityCreated">entityCreated</a></li><li><a href="server.entity.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="server.entity.html#.event:entityModelChange">entityModelChange</a></li><li><a href="server.gamemode.html#.event:playerBoundKeyPressed">playerBoundKeyPressed</a></li><li><a href="server.gamemode.html#.event:runServerCode">runServerCode</a></li><li><a href="server.item.html#.event:restoreHunger">restoreHunger</a></li><li><a href="server.item.html#.event:restoreThirst">restoreThirst</a></li><li><a href="server.menu.html#.event:callInventoryOption">callInventoryOption</a></li><li><a href="server.menu.html#.event:executeBankOperation">executeBankOperation</a></li><li><a href="server.menu.html#.event:loadBankBalance">loadBankBalance</a></li><li><a href="server.menu.html#.event:purchaseSaleItem">purchaseSaleItem</a></li><li><a href="server.menu.html#.event:unbindToggleChat">unbindToggleChat</a></li><li><a href="server.menu.html#.event:verifyLogin">verifyLogin</a></li><li><a href="server.nativui.html#.event:menuCheckboxChange">menuCheckboxChange</a></li><li><a href="server.nativui.html#.event:menuClose">menuClose</a></li><li><a href="server.nativui.html#.event:menuIndexChage">menuIndexChage</a></li><li><a href="server.nativui.html#.event:menuItemSelect">menuItemSelect</a></li><li><a href="server.nativui.html#.event:menuListChange">menuListChange</a></li><li><a href="server.nativui.html#.event:menuSliderChange">menuSliderChange</a></li><li><a href="server.player.html#.event:playerChat">playerChat</a></li><li><a href="server.player.html#.event:playerCommand">playerCommand</a></li><li><a href="server.player.html#.event:playerDeath">playerDeath</a></li><li><a href="server.player.html#.event:playerJoin">playerJoin</a></li><li><a href="server.player.html#.event:playerQuit">playerQuit</a></li><li><a href="server.player.html#.event:playerReady">playerReady</a></li><li><a href="server.player.html#.event:playerSpawn">playerSpawn</a></li><li><a href="server.player.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="server.player.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="server.stream.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="server.stream.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="server.vehicle.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="server.vehicle.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="server.vehicle.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="server.vehicle.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="server.vehicle.html#.event:trailerAttached">trailerAttached</a></li><li><a href="server.vehicle.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="server.vehicle.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="server.vehicle.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="server.vehicle.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="server.waypoint.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="server.waypoint.html#.event:playerReachWaypoint">playerReachWaypoint</a></li></ul><h3>Namespaces</h3><ul><li><a href="client.html">client</a></li><li><a href="client.browser.html">client.browser</a></li><li><a href="client.character.html">client.character</a></li><li><a href="client.checkpoint.html">client.checkpoint</a></li><li><a href="client.colshape.html">client.colshape</a></li><li><a href="client.command.html">client.command</a></li><li><a href="client.gamemode.html">client.gamemode</a></li><li><a href="client.menu.html">client.menu</a></li><li><a href="client.player.html">client.player</a></li><li><a href="client.render.html">client.render</a></li><li><a href="client.stream.html">client.stream</a></li><li><a href="client.vehicle.html">client.vehicle</a></li><li><a href="client.waypoint.html">client.waypoint</a></li><li><a href="client.weapon.html">client.weapon</a></li><li><a href="client.yarp.nativeui.html">nativeui</a></li><li><a href="client.yarp.utils.html">utils</a></li><li><a href="server.html">server</a></li><li><a href="server.character.html">server.character</a></li><li><a href="server.checkpoint.html">server.checkpoint</a></li><li><a href="server.colshape.html">server.colshape</a></li><li><a href="server.entity.html">server.entity</a></li><li><a href="server.gamemode.html">server.gamemode</a></li><li><a href="server.item.html">server.item</a></li><li><a href="server.menu.html">server.menu</a></li><li><a href="server.nativui.html">server.nativui</a></li><li><a href="server.player.html">server.player</a></li><li><a href="server.stream.html">server.stream</a></li><li><a href="server.vehicle.html">server.vehicle</a></li><li><a href="server.waypoint.html">server.waypoint</a></li><li><a href="server.world.html">server.world</a></li><li><a href="server.yarp.utils.html">utils</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li></ul><h3>Global</h3><ul><li><a href="global.html#menuAddItem">menuAddItem</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GMObject.html">GMObject</a></li><li><a href="GMProxy.html">GMProxy</a></li><li><a href="Transaction.Transaction.html">Transaction</a></li><li><a href="yarp.Blip.html">Blip</a></li><li><a href="yarp.Blip.Blip.html">Blip</a></li><li><a href="yarp.Character.html">Character</a></li><li><a href="yarp.Character.Character.html">Character</a></li><li><a href="yarp.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Checkpoint.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Colshape.html">Colshape</a></li><li><a href="yarp.Colshape.Colshape.html">Colshape</a></li><li><a href="yarp.Command.html">Command</a></li><li><a href="yarp.Command.Command.html">Command</a></li><li><a href="yarp.Door.html">Door</a></li><li><a href="yarp.Door.Door.html">Door</a></li><li><a href="yarp.Event.html">Event</a></li><li><a href="yarp.Event.Event.html">Event</a></li><li><a href="yarp.Group.html">Group</a></li><li><a href="yarp.Group.Group.html">Group</a></li><li><a href="yarp.Hotkey.html">Hotkey</a></li><li><a href="yarp.Hotkey.Hotkey.html">Hotkey</a></li><li><a href="yarp.Item.html">Item</a></li><li><a href="yarp.Item.Item.html">Item</a></li><li><a href="yarp.Label.html">Label</a></li><li><a href="yarp.Label.Label.html">Label</a></li><li><a href="yarp.Location.html">Location</a></li><li><a href="yarp.Location.Location.html">Location</a></li><li><a href="yarp.Marker.html">Marker</a></li><li><a href="yarp.Marker.Marker.html">Marker</a></li><li><a href="yarp.Menu.html">Menu</a></li><li><a href="yarp.Menu.Menu.html">Menu</a></li><li><a href="yarp.Npc.html">Npc</a></li><li><a href="yarp.Npc.Npc.html">Npc</a></li><li><a href="yarp.Pool.html">Pool</a></li><li><a href="yarp.Pool.Pool.html">Pool</a></li><li><a href="yarp.Prop.html">Prop</a></li><li><a href="yarp.Prop.Prop.html">Prop</a></li><li><a href="yarp.Transaction.html">Transaction</a></li><li><a href="yarp.User.html">User</a></li><li><a href="yarp.User.User.html">User</a></li><li><a href="yarp.Variable.html">Variable</a></li><li><a href="yarp.Variable.Variable.html">Variable</a></li><li><a href="yarp.Vehicle.html">Vehicle</a></li><li><a href="yarp.Vehicle.Vehicle.html">Vehicle</a></li><li><a href="yarp.Weapon.html">Weapon</a></li><li><a href="yarp.Weapon.Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="yarp.server.html#.event:closeStoreMenu">closeStoreMenu</a></li><li><a href="yarp.server.html#.event:menuItemClicked">menuItemClicked</a></li><li><a href="yarp.server.html#.event:openStoreMenu">openStoreMenu</a></li></ul><h3>Namespaces</h3><ul><li><a href="client.player.html">client.player</a></li><li><a href="server.character.html">server.character</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li></ul><h3>Global</h3><ul><li><a href="global.html#camdir">camdir</a></li><li><a href="global.html#equiped">equiped</a></li><li><a href="global.html#exit">exit</a></li><li><a href="global.html#faceModel">faceModel</a></li><li><a href="global.html#keybinds">keybinds</a></li><li><a href="global.html#oldWallet">oldWallet</a></li><li><a href="global.html#utils">utils</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Sep 16 2018 20:56:04 GMT-0300 (Brasilia Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 22 2018 07:54:02 GMT-0300 (Brasilia Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
