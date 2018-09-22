@@ -32,7 +32,7 @@
  */
 class GMObject {
   /**
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @abstract
    * @throws {TypeError} Abstract class GMObject cannot be instantiated directly.
    */
@@ -46,7 +46,7 @@ class GMObject {
    * Returns true if saving is blocked.
    * @instance
    * @function isLocked
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @return {Boolean} Saving blocked?
    */
   isLocked() {
@@ -57,7 +57,7 @@ class GMObject {
    * Blocks saving the object.
    * @instance
    * @function lock
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   lock() {
     this.lock__save__ = true;
@@ -67,7 +67,7 @@ class GMObject {
    * Unblocks saving the object.
    * @instance
    * @function unlock
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   unlock() {
     this.lock__save__ = false;
@@ -77,7 +77,7 @@ class GMObject {
    * Save the object.
    * @instance
    * @function save
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   save() {
     yarp.mng.save(this);
@@ -87,7 +87,7 @@ class GMObject {
    * Remove the object.
    * @instance
    * @function remove
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   remove() {
     if (this.mp) this.mp.destroy();
@@ -98,7 +98,7 @@ class GMObject {
    * Get only persisten data
    * @instance
    * @function data
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @return {Object} Persistent data object.
    */
   get data() {
@@ -115,7 +115,7 @@ class GMObject {
    * Get only persisten data without prefix
    * @instance
    * @function data
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @return {Object} Persistent data object.
    */
   get cleanData() {
@@ -132,7 +132,7 @@ class GMObject {
    * Evals the call parameter.
    * @instance
    * @function call
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   get call() {
     return (eval(this._call));
@@ -142,7 +142,7 @@ class GMObject {
    * Set call function as string.
    * @instance
    * @function call
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @param {Function} value Call function.
    */
   set call(value) {
@@ -153,7 +153,7 @@ class GMObject {
    * Evals the enter parameter.
    * @instance
    * @function enter
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   get enter() {
     return (eval(this._enter));
@@ -163,7 +163,7 @@ class GMObject {
    * Set enter function as string.
    * @instance
    * @function enter
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @param {Function} value Enter function.
    */
   set enter(value) {
@@ -174,7 +174,7 @@ class GMObject {
    * Evals the leave parameter.
    * @instance
    * @function leave
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   get leave() {
     return (eval(this._leave));
@@ -184,7 +184,7 @@ class GMObject {
    * Set leave function as string.
    * @instance
    * @function leave
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @param {Function} value Leave function.
    */
   set leave(value) {
@@ -195,7 +195,7 @@ class GMObject {
    * Returns first vaule or second value as default.
    * @instance
    * @function default
-   * @memberof yarp.Object
+   * @memberof GMObject
    * @param {*} v Verified value.
    * @param {*} d Default value if v is null.
    * @return {*} v if it's not null, or d
@@ -208,7 +208,7 @@ class GMObject {
    * Make getter and setter for persistent variables.
    * @instance
    * @function makeGetterSetter
-   * @memberof yarp.Object
+   * @memberof GMObject
    */
   makeGetterSetter() {
     for (let key in this) {
@@ -240,13 +240,13 @@ module.exports = GMObject;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GMObject.html">GMObject</a></li><li><a href="GMProxy.html">GMProxy</a></li><li><a href="Transaction.Transaction.html">Transaction</a></li><li><a href="yarp.Blip.html">Blip</a></li><li><a href="yarp.Blip.Blip.html">Blip</a></li><li><a href="yarp.Character.html">Character</a></li><li><a href="yarp.Character.Character.html">Character</a></li><li><a href="yarp.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Checkpoint.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Colshape.html">Colshape</a></li><li><a href="yarp.Colshape.Colshape.html">Colshape</a></li><li><a href="yarp.Command.html">Command</a></li><li><a href="yarp.Command.Command.html">Command</a></li><li><a href="yarp.Door.html">Door</a></li><li><a href="yarp.Door.Door.html">Door</a></li><li><a href="yarp.Event.html">Event</a></li><li><a href="yarp.Event.Event.html">Event</a></li><li><a href="yarp.Group.html">Group</a></li><li><a href="yarp.Group.Group.html">Group</a></li><li><a href="yarp.Hotkey.html">Hotkey</a></li><li><a href="yarp.Hotkey.Hotkey.html">Hotkey</a></li><li><a href="yarp.Item.html">Item</a></li><li><a href="yarp.Item.Item.html">Item</a></li><li><a href="yarp.Label.html">Label</a></li><li><a href="yarp.Label.Label.html">Label</a></li><li><a href="yarp.Location.html">Location</a></li><li><a href="yarp.Location.Location.html">Location</a></li><li><a href="yarp.Marker.html">Marker</a></li><li><a href="yarp.Marker.Marker.html">Marker</a></li><li><a href="yarp.Menu.html">Menu</a></li><li><a href="yarp.Menu.Menu.html">Menu</a></li><li><a href="yarp.Npc.html">Npc</a></li><li><a href="yarp.Npc.Npc.html">Npc</a></li><li><a href="yarp.Pool.html">Pool</a></li><li><a href="yarp.Pool.Pool.html">Pool</a></li><li><a href="yarp.Prop.html">Prop</a></li><li><a href="yarp.Prop.Prop.html">Prop</a></li><li><a href="yarp.Transaction.html">Transaction</a></li><li><a href="yarp.User.html">User</a></li><li><a href="yarp.User.User.html">User</a></li><li><a href="yarp.Variable.html">Variable</a></li><li><a href="yarp.Variable.Variable.html">Variable</a></li><li><a href="yarp.Vehicle.html">Vehicle</a></li><li><a href="yarp.Vehicle.Vehicle.html">Vehicle</a></li><li><a href="yarp.Weapon.html">Weapon</a></li><li><a href="yarp.Weapon.Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="yarp.server.html#.event:closeStoreMenu">closeStoreMenu</a></li><li><a href="yarp.server.html#.event:menuItemClicked">menuItemClicked</a></li><li><a href="yarp.server.html#.event:openStoreMenu">openStoreMenu</a></li></ul><h3>Namespaces</h3><ul><li><a href="client.player.html">client.player</a></li><li><a href="server.character.html">server.character</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li></ul><h3>Global</h3><ul><li><a href="global.html#camdir">camdir</a></li><li><a href="global.html#equiped">equiped</a></li><li><a href="global.html#exit">exit</a></li><li><a href="global.html#faceModel">faceModel</a></li><li><a href="global.html#keybinds">keybinds</a></li><li><a href="global.html#oldWallet">oldWallet</a></li><li><a href="global.html#utils">utils</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blip.html">Blip</a></li><li><a href="Character.html">Character</a></li><li><a href="Checkpoint.html">Checkpoint</a></li><li><a href="Colshape.html">Colshape</a></li><li><a href="Command.html">Command</a></li><li><a href="Door.html">Door</a></li><li><a href="Event.html">Event</a></li><li><a href="GMObject.html">GMObject</a></li><li><a href="GMProxy.html">GMProxy</a></li><li><a href="Group.html">Group</a></li><li><a href="Hotkey.html">Hotkey</a></li><li><a href="Item.html">Item</a></li><li><a href="Label.html">Label</a></li><li><a href="Location.html">Location</a></li><li><a href="Marker.html">Marker</a></li><li><a href="Menu.html">Menu</a></li><li><a href="Npc.html">Npc</a></li><li><a href="Pool.html">Pool</a></li><li><a href="Prop.html">Prop</a></li><li><a href="Transaction.html">Transaction</a></li><li><a href="User.html">User</a></li><li><a href="Variable.html">Variable</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ragemp.html">ragemp</a></li><li><a href="ragemp.client.html">client</a></li><li><a href="ragemp.server.html">server</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.client.html">client</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li><li><a href="yarp.server.html">server</a></li><li><a href="yarp.utils.html">utils</a></li><li><a href="yarp.utils.client.html">client</a></li><li><a href="yarp.utils.server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#chalk">chalk</a></li><li><a href="global.html#rl">rl</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 22 2018 07:54:02 GMT-0300 (Brasilia Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 22 2018 09:34:37 GMT-0300 (Brasilia Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

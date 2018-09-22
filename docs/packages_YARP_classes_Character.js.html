@@ -29,12 +29,11 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 /**
  * Implements a Character.
- * @class yarp.Character
- * @extends yarp.Object
  */
 class Character extends yarp.Object {
   /**
    * Creates an instance of Character.
+   * @extends yarp.Object
    * @param {Object} params
    * @param {String} params.id
    * @param {String} params.socialClub
@@ -59,7 +58,7 @@ class Character extends yarp.Object {
    * @param {Object} [params.customization={}]
    * @param {Function} [params.enter=() => {}]
    * @param {Function} [params.leave=() => {}]
-   * @memberof yarp.Character
+   * @memberof Character
    */
   constructor(params) {
     super();
@@ -99,7 +98,7 @@ class Character extends yarp.Object {
    * Get character player.
    * @instance
    * @function player
-   * @memberof yarp.Character
+   * @memberof Character
    * @return {Object} Player.
    */
   get player() {
@@ -115,7 +114,7 @@ class Character extends yarp.Object {
    * Get character user.
    * @instance
    * @function user
-   * @memberof yarp.Character
+   * @memberof Character
    * @return {Object} User.
    */
   get user() {
@@ -126,7 +125,7 @@ class Character extends yarp.Object {
    * Get character balance.
    * @instance
    * @function balance
-   * @memberof yarp.Character
+   * @memberof Character
    * @return {Array&lt;Object>} Balance.
    */
   get balance() {
@@ -143,9 +142,8 @@ class Character extends yarp.Object {
    * Call enter fuction for character and it's groups.
    * @instance
    * @function enter
-   * @memberof yarp.Character
+   * @memberof Character
    * @return {Function} Enter functions.
-   * @fires characterJoinedGroup
    */
   get enter() {
     return () => {
@@ -164,7 +162,7 @@ class Character extends yarp.Object {
    * Set the enter function as a string
    * @instance
    * @function enter
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Function} value Enter function.
    */
   set enter(value) {
@@ -175,9 +173,8 @@ class Character extends yarp.Object {
    * Call leave fuction for character and it's groups.
    * @instance
    * @function leave
-   * @memberof yarp.Character
+   * @memberof Character
    * @return {Function} Leave functions.
-   * @fires characterLeftGroup
    */
   get leave() {
     return () => {
@@ -196,7 +193,7 @@ class Character extends yarp.Object {
    * Set the leave function as a string
    * @instance
    * @function leave
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Function} value Leave function.
    */
   set leave(value) {
@@ -207,7 +204,7 @@ class Character extends yarp.Object {
    * Get the health value
    * @instance
    * @function health
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get health() {
     return this._health;
@@ -217,7 +214,7 @@ class Character extends yarp.Object {
    * Set the health value for the player
    * @instance
    * @function health
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Health value
    */
   set health(value) {
@@ -232,7 +229,7 @@ class Character extends yarp.Object {
    * Get the wallet value
    * @instance
    * @function wallet
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get wallet() {
     return this._wallet;
@@ -242,7 +239,7 @@ class Character extends yarp.Object {
    * Set the wallet value for the player
    * @instance
    * @function wallet
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Wallet value
    */
   set wallet(value) {
@@ -258,7 +255,7 @@ class Character extends yarp.Object {
    * Get the bank value
    * @instance
    * @function bank
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get bank() {
     return this._bank;
@@ -268,7 +265,7 @@ class Character extends yarp.Object {
    * Set the bank value for the player
    * @instance
    * @function bank
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Bank value
    */
   set bank(value) {
@@ -284,7 +281,7 @@ class Character extends yarp.Object {
    * Get the hunger value
    * @instance
    * @function hunger
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get hunger() {
     return this._hunger;
@@ -294,7 +291,7 @@ class Character extends yarp.Object {
    * Set the hunger value for the player
    * @instance
    * @function hunger
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Hunger value
    */
   set hunger(value) {
@@ -316,7 +313,7 @@ class Character extends yarp.Object {
    * Get the thirst value
    * @instance
    * @function thirst
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get thirst() {
     return this._thirst;
@@ -326,7 +323,7 @@ class Character extends yarp.Object {
    * Set the thirst value for the player
    * @instance
    * @function thirst
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Thirst value
    */
   set thirst(value) {
@@ -348,7 +345,7 @@ class Character extends yarp.Object {
    * Get the xp value
    * @instance
    * @function xp
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get xp() {
     return this._xp;
@@ -358,7 +355,7 @@ class Character extends yarp.Object {
    * Set the xp value for the player
    * @instance
    * @function xp
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value XP value
    */
   set xp(value) {
@@ -378,7 +375,7 @@ class Character extends yarp.Object {
    * Get the heading value
    * @instance
    * @function heading
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get heading() {
     return this._heading;
@@ -388,7 +385,7 @@ class Character extends yarp.Object {
    * Set the heading value for the player
    * @instance
    * @function heading
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Heading value
    */
   set heading(value) {
@@ -403,7 +400,7 @@ class Character extends yarp.Object {
    * Get the position value
    * @instance
    * @function position
-   * @memberof yarp.Character
+   * @memberof Character
    */
   get position() {
     return this._position;
@@ -413,7 +410,7 @@ class Character extends yarp.Object {
    * Set the position value for the player
    * @instance
    * @function position
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Position value
    */
   set position(value) {
@@ -428,7 +425,7 @@ class Character extends yarp.Object {
    * Update character last login.
    * @instance
    * @function updateLastLogin
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} ip Character ip.
    */
   updateLastLogin(ip) {
@@ -439,7 +436,7 @@ class Character extends yarp.Object {
    * Try wallet payment.
    * @instance
    * @function tryWalletPayment
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Amount to pay.
    * @return {Boolean} Operation success/fail.
    */
@@ -455,7 +452,7 @@ class Character extends yarp.Object {
    * Try bank payment.
    * @instance
    * @function tryBankPayment
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Amount to pay.
    * @return {Boolean} Operation success/fail.
    */
@@ -476,7 +473,7 @@ class Character extends yarp.Object {
    * Try full payment.
    * @instance
    * @function tryFullPayment
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Amount to pay.
    * @return {Boolean} Operation success/fail.
    */
@@ -493,7 +490,7 @@ class Character extends yarp.Object {
    * Try deposit.
    * @instance
    * @function tryDeposit
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Amount to deposit.
    * @return {Boolean} Operation success/fail.
    */
@@ -515,7 +512,7 @@ class Character extends yarp.Object {
    * Try withdraw.
    * @instance
    * @function tryWithdraw
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} value Amount to withdraw.
    * @return {Boolean} Operation success/fail.
    */
@@ -537,7 +534,7 @@ class Character extends yarp.Object {
    * Try transfer.
    * @instance
    * @function tryTransfer
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} target Target character name.
    * @param {Number} value Amount to transfer.
    * @return {Boolean} Operation success/fail.
@@ -561,7 +558,7 @@ class Character extends yarp.Object {
    * Give an item.
    * @instance
    * @function giveItem
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Object} item Item to give.
    * @param {Number} amount Amount to give.
    * @return {Boolean} Operation success/fail.
@@ -584,7 +581,7 @@ class Character extends yarp.Object {
    * Take an item.
    * @instance
    * @function takeItem
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Object} item Item to take.
    * @param {Number} amount Amount to take.
    * @return {Boolean} Operation success/fail.
@@ -608,7 +605,7 @@ class Character extends yarp.Object {
    * Check if has an item.
    * @instance
    * @function takeItem
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} id Item id.
    * @return {Boolean} If has or not the item.
    */
@@ -620,7 +617,7 @@ class Character extends yarp.Object {
    * Check if has all items.
    * @instance
    * @function hasItems
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Array&lt;String>} items Items id.
    * @return {Boolean} If has or not all items.
    */
@@ -637,10 +634,9 @@ class Character extends yarp.Object {
    * Give a weapon.
    * @instance
    * @function giveWeapon
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Object} weapon Weapon object or id.
    * @param {Number} amount Amount of bullets.
-   * @fires equipWeapon
    */
   giveWeapon(weapon, amount) {
     if ((typeof weapon) === 'string') weapon = yarp.weapons[weapon];
@@ -657,9 +653,8 @@ class Character extends yarp.Object {
    * Take a weapon.
    * @instance
    * @function takeWeapon
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Object} weapon Weapon object or id.
-   * @fires unequipWeapon
    */
   takeWeapon(weapon) {
     if ((typeof weapon) === 'string') weapon = yarp.weapons[weapon];
@@ -675,7 +670,7 @@ class Character extends yarp.Object {
    * Take weapon ammo.
    * @instance
    * @function takeWeaponAmmo
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} id Weapon id.
    * @param {Number} amount Amount of bullets.
    */
@@ -693,7 +688,7 @@ class Character extends yarp.Object {
    * Give weapon ammo.
    * @instance
    * @function giveWeaponAmmo
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} id Weapon id.
    * @param {Number} amount Amount of bullets.
    */
@@ -708,7 +703,7 @@ class Character extends yarp.Object {
    * Take ammo.
    * @instance
    * @function takeAmmo
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} id Ammo id.
    * @param {Number} amount Amount of bullets.
    */
@@ -727,7 +722,7 @@ class Character extends yarp.Object {
    * Give ammo.
    * @instance
    * @function giveAmmo
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} id Ammo id.
    * @param {Number} amount Amount of bullets.
    */
@@ -743,7 +738,7 @@ class Character extends yarp.Object {
    * Check if has a weapon.
    * @instance
    * @function hasWeapon
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} id Weapon id.
    * @return {Boolean} If has or not the weapon.
    */
@@ -755,7 +750,7 @@ class Character extends yarp.Object {
    * Check if has all weapons.
    * @instance
    * @function hasWeapons
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Array&lt;String>} weapons Weapons id.
    * @return {Boolean} If has or not all the weapons.
    */
@@ -772,10 +767,9 @@ class Character extends yarp.Object {
    * Give a group.
    * @instance
    * @function giveGroup
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} group Group id.
    * @return {Boolean} Operation success/fail.
-   * @fires characterJoinedGroup
    */
   giveGroup(group) {
     if (this.groups.indexOf(group) == -1) {
@@ -803,10 +797,9 @@ class Character extends yarp.Object {
    * Take a group.
    * @instance
    * @function takeGroup
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} group Group id.
    * @return {Boolean} Operation success/fail.
-   * @fires characterLeftGroup
    */
   takeGroup(group) {
     if (this.groups.indexOf(group) > -1) {
@@ -827,7 +820,7 @@ class Character extends yarp.Object {
    * Get group by type.
    * @instance
    * @function getGroupByType
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} type Group type.
    * @return {String} Group id.
    */
@@ -846,7 +839,7 @@ class Character extends yarp.Object {
    * Get groups by types.
    * @instance
    * @function getGroupByTypes
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Array&lt;String>} types Group types.
    * @return {Array&lt;String>} Group ids.
    */
@@ -867,7 +860,7 @@ class Character extends yarp.Object {
    * Check if has group.
    * @instance
    * @function hasGroup
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} id Group id.
    * @return {Boolean} If has or not the group.
    */
@@ -879,7 +872,7 @@ class Character extends yarp.Object {
    * Check if has all groups.
    * @instance
    * @function hasGroup
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Array&lt;String>} groups Group ids.
    * @return {Boolean} If has or not all the groups.
    */
@@ -896,7 +889,7 @@ class Character extends yarp.Object {
    * Check if has permission.
    * @instance
    * @function hasPermission
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {String} permission Permission.
    * @return {Boolean} If has or not the permission.
    */
@@ -998,7 +991,7 @@ class Character extends yarp.Object {
    * Check if has all permissions.
    * @instance
    * @function hasPermission
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Array&lt;String>} permissions Permissions.
    * @return {Boolean} If has or not all permissions.
    */
@@ -1015,7 +1008,7 @@ class Character extends yarp.Object {
    * Apply saved character customization to ped.
    * @instance
    * @function loadCustomization
-   * @memberof yarp.Character
+   * @memberof Character
    */
   applyCustomization() {
     let player = this.player;
@@ -1045,7 +1038,7 @@ class Character extends yarp.Object {
    * Sets character to default customization.
    * @instance
    * @function defaultCustomization
-   * @memberof yarp.Character
+   * @memberof Character
    */
   defaultCustomization() {
     this.customization = {
@@ -1082,7 +1075,7 @@ class Character extends yarp.Object {
    * Sets character to default customization.
    * @instance
    * @function defaultCustomization
-   * @memberof yarp.Character
+   * @memberof Character
    * @param {Number} index Overlay index
    * @return {Number} Color
    */
@@ -1129,13 +1122,13 @@ module.exports = Character;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GMObject.html">GMObject</a></li><li><a href="GMProxy.html">GMProxy</a></li><li><a href="Transaction.Transaction.html">Transaction</a></li><li><a href="yarp.Blip.html">Blip</a></li><li><a href="yarp.Blip.Blip.html">Blip</a></li><li><a href="yarp.Character.html">Character</a></li><li><a href="yarp.Character.Character.html">Character</a></li><li><a href="yarp.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Checkpoint.Checkpoint.html">Checkpoint</a></li><li><a href="yarp.Colshape.html">Colshape</a></li><li><a href="yarp.Colshape.Colshape.html">Colshape</a></li><li><a href="yarp.Command.html">Command</a></li><li><a href="yarp.Command.Command.html">Command</a></li><li><a href="yarp.Door.html">Door</a></li><li><a href="yarp.Door.Door.html">Door</a></li><li><a href="yarp.Event.html">Event</a></li><li><a href="yarp.Event.Event.html">Event</a></li><li><a href="yarp.Group.html">Group</a></li><li><a href="yarp.Group.Group.html">Group</a></li><li><a href="yarp.Hotkey.html">Hotkey</a></li><li><a href="yarp.Hotkey.Hotkey.html">Hotkey</a></li><li><a href="yarp.Item.html">Item</a></li><li><a href="yarp.Item.Item.html">Item</a></li><li><a href="yarp.Label.html">Label</a></li><li><a href="yarp.Label.Label.html">Label</a></li><li><a href="yarp.Location.html">Location</a></li><li><a href="yarp.Location.Location.html">Location</a></li><li><a href="yarp.Marker.html">Marker</a></li><li><a href="yarp.Marker.Marker.html">Marker</a></li><li><a href="yarp.Menu.html">Menu</a></li><li><a href="yarp.Menu.Menu.html">Menu</a></li><li><a href="yarp.Npc.html">Npc</a></li><li><a href="yarp.Npc.Npc.html">Npc</a></li><li><a href="yarp.Pool.html">Pool</a></li><li><a href="yarp.Pool.Pool.html">Pool</a></li><li><a href="yarp.Prop.html">Prop</a></li><li><a href="yarp.Prop.Prop.html">Prop</a></li><li><a href="yarp.Transaction.html">Transaction</a></li><li><a href="yarp.User.html">User</a></li><li><a href="yarp.User.User.html">User</a></li><li><a href="yarp.Variable.html">Variable</a></li><li><a href="yarp.Variable.Variable.html">Variable</a></li><li><a href="yarp.Vehicle.html">Vehicle</a></li><li><a href="yarp.Vehicle.Vehicle.html">Vehicle</a></li><li><a href="yarp.Weapon.html">Weapon</a></li><li><a href="yarp.Weapon.Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="yarp.server.html#.event:closeStoreMenu">closeStoreMenu</a></li><li><a href="yarp.server.html#.event:menuItemClicked">menuItemClicked</a></li><li><a href="yarp.server.html#.event:openStoreMenu">openStoreMenu</a></li></ul><h3>Namespaces</h3><ul><li><a href="client.player.html">client.player</a></li><li><a href="server.character.html">server.character</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li></ul><h3>Global</h3><ul><li><a href="global.html#camdir">camdir</a></li><li><a href="global.html#equiped">equiped</a></li><li><a href="global.html#exit">exit</a></li><li><a href="global.html#faceModel">faceModel</a></li><li><a href="global.html#keybinds">keybinds</a></li><li><a href="global.html#oldWallet">oldWallet</a></li><li><a href="global.html#utils">utils</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blip.html">Blip</a></li><li><a href="Character.html">Character</a></li><li><a href="Checkpoint.html">Checkpoint</a></li><li><a href="Colshape.html">Colshape</a></li><li><a href="Command.html">Command</a></li><li><a href="Door.html">Door</a></li><li><a href="Event.html">Event</a></li><li><a href="GMObject.html">GMObject</a></li><li><a href="GMProxy.html">GMProxy</a></li><li><a href="Group.html">Group</a></li><li><a href="Hotkey.html">Hotkey</a></li><li><a href="Item.html">Item</a></li><li><a href="Label.html">Label</a></li><li><a href="Location.html">Location</a></li><li><a href="Marker.html">Marker</a></li><li><a href="Menu.html">Menu</a></li><li><a href="Npc.html">Npc</a></li><li><a href="Pool.html">Pool</a></li><li><a href="Prop.html">Prop</a></li><li><a href="Transaction.html">Transaction</a></li><li><a href="User.html">User</a></li><li><a href="Variable.html">Variable</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ragemp.html">ragemp</a></li><li><a href="ragemp.client.html">client</a></li><li><a href="ragemp.server.html">server</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.client.html">client</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li><li><a href="yarp.server.html">server</a></li><li><a href="yarp.utils.html">utils</a></li><li><a href="yarp.utils.client.html">client</a></li><li><a href="yarp.utils.server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#chalk">chalk</a></li><li><a href="global.html#rl">rl</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 22 2018 07:54:02 GMT-0300 (Brasilia Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 22 2018 09:34:37 GMT-0300 (Brasilia Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
