@@ -32,7 +32,16 @@
  * @memberof yarp.client
  */
 
+/**
+ * Add menu item.
+ * @function menuAddItem
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ * @param {Object} item The item data.
+ */
 yarp.client.menuAddItem = (menuId, item) => {
+    let index = yarp.menus[menuId].menuItems.length;
+    let type = yarp.utils.client.default(item.type, 'text');
     let menuItem = [item.displayText, item.data,
         yarp.utils.client.default(item.caption, ''),
         yarp.utils.client.default(item.badge, NaN),
@@ -41,7 +50,7 @@ yarp.client.menuAddItem = (menuId, item) => {
         new NativeMenu.Color(...yarp.utils.client.default(item.hoverTextColor, [20, 0, 0, 240])),
         new NativeMenu.Color(...yarp.utils.client.default(item.hoverBackgroundColor, [255, 255, 255, 170])),
     ];
-    switch (item.type) {
+    switch (type) {
         case 'checkbox':
             menuItem = new NativeMenu.CheckboxMenuItem(...menuItem);
             break;
@@ -62,6 +71,12 @@ yarp.client.menuAddItem = (menuId, item) => {
             menuItem = new NativeMenu.SliderMenuItem(...menuItem);
             break;
         case 'close':
+            menuItem = [...menuItem.slice(0, 4),
+                new NativeMenu.Color(...yarp.utils.client.default(item.textColor, [255, 255, 255, 255])),
+                new NativeMenu.Color(...yarp.utils.client.default(item.backgroundColor, [242, 67, 67, 204])),
+                new NativeMenu.Color(...yarp.utils.client.default(item.hoverTextColor, [255, 255, 255, 255])),
+                new NativeMenu.Color(...yarp.utils.client.default(item.hoverBackgroundColor, [242, 67, 67, 255])),
+            ];
             menuItem = new NativeMenu.CloseMenuItem(...menuItem);
             break;
         case 'submenu':
@@ -78,27 +93,34 @@ yarp.client.menuAddItem = (menuId, item) => {
     if (menuItem.addOnClickEvent) {
         menuItem.addOnClickEvent({
             trigger: (data) => {
-                yarp.server.menuItemClicked(menuId, item.type, data);
+                yarp.server.menuItemClicked(menuId, type, index, data);
             },
         });
     }
     if (menuItem.addOnSelectEvent) {
         menuItem.addOnSelectEvent({
             trigger: (data) => {
-                yarp.server.menuItemSelected(menuId, item.type, data);
+                yarp.server.menuItemSelected(menuId, type, index, data);
             },
         });
     }
     if (menuItem.addOnChangeEvent) {
         menuItem.addOnChangeEvent({
             trigger: (data) => {
-                yarp.server.menuItemChanged(menuId, item.type, data);
+                yarp.server.menuItemChanged(menuId, type, index, data);
             },
         });
     }
     yarp.menus[menuId].add(menuItem);
 };
 
+/**
+ * Creates menu.
+ * @function createMenu
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ * @param {Object} options The menu data.
+ */
 yarp.client.createMenu = (menuId, options) => {
     yarp.menus[menuId] = new NativeMenu.MainMenu(options.title, false);
     yarp.menus[menuId].offset = yarp.utils.client.default(options.offset, [0, 0]);
@@ -118,35 +140,170 @@ yarp.client.createMenu = (menuId, options) => {
     });
 };
 
-
+/**
+ * Toggles menu open/closed.
+ * @function toggleMenu
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ */
 yarp.client.toggleMenu = (menuId) => {
     if (yarp.menus[menuId].isVisible) {
-        mp.gui.chat.show(true);
-        yarp.menus[menuId].close();
+        yarp.client.closeMenu(menuId);
     } else {
-        mp.gui.chat.show(false);
-        mp.gui.cursor.visible = false;
-        yarp.menus[menuId].open();
+        yarp.client.openMenu(menuId);
     }
 };
 
+/**
+ * Open menu.
+ * @function openMenu
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ */
 yarp.client.openMenu = (menuId) => {
+    yarp.client.closeAllMenus();
     yarp.menus[menuId].open();
     mp.gui.cursor.visible = false;
     mp.gui.chat.show(false);
 };
 
+/**
+ * Close menu.
+ * @function closeMenu
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ */
 yarp.client.closeMenu = (menuId) => {
-    yarp.menus[menuId].close();
+    let currentMenu = yarp.client.getCurrentMenu();
+    let targetMenu = yarp.menus[menuId];
+    while (currentMenu != targetMenu) {
+        yarp.client.removeSubMenu(currentMenu);
+        currentMenu = yarp.client.getCurrentMenu();
+    }
+    targetMenu.close();
     mp.gui.chat.show(true);
 };
 
+/**
+ * Close all menus.
+ * @function closeAllMenus
+ * @memberof yarp.client
+ */
+yarp.client.closeAllMenus = () => {
+    for (let menuId in yarp.menus) {
+        if (yarp.menus[menuId].isVisible) {
+            yarp.client.closeMenu(menuId);
+        }
+    }
+};
+
+/**
+ * Creates menu.
+ * @function menuAddItems
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ * @param {Array&lt;Object>} items Items list.
+ */
 yarp.client.menuAddItems = (menuId, items) => {
-    for (item of items) {
+    for (let item of items) {
         yarp.client.menuAddItem(menuId, item);
     }
 };
 
+/**
+ * Updates menu item.
+ * @function menuUpdateItem
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ * @param {Number} index The item index.
+ * @param {Object} item Items list.
+ */
+yarp.client.menuUpdateItem = (menuId, index, item) => {
+    let menuItem = yarp.menus[menuId].menuItems[index];
+    Object.assign(menuItem, item);
+};
+
+/**
+ * Updates menu items.
+ * @function menuUpdateItems
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ * @param {Object} indexItems Dictionary of items by index.
+ */
+yarp.client.menuUpdateItems = (menuId, indexItems) => {
+    for (let index in indexItems) {
+        if (indexItems.hasOwnProperty(index)) {
+            yarp.client.menuUpdateItem(menuId, Number(index), indexItems[index]);
+        }
+    }
+};
+
+/**
+ * Removes menu item.
+ * @function menuRemoveItem
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ * @param {Number} index The item index.
+ */
+yarp.client.menuRemoveItem = (menuId, index) => {
+    let currentMenu = yarp.client.getCurrentMenu();
+    yarp.client.removeSubMenu(currentMenu);
+    yarp.menus[menuId].menuItems.splice(index, 1);
+    yarp.menus[menuId].setToItem(index % yarp.menus[menuId].menuItems.length);
+};
+
+/**
+ * Removes menu item.
+ * @function menuRemoveItems
+ * @memberof yarp.client
+ * @param {String} menuId The menu id.
+ * @param {Number} indexStart The starting item index.
+ * @param {Number} indexEnd The last index to remove.
+ */
+yarp.client.menuRemoveItems = (menuId, indexStart, indexEnd) => {
+    let currentMenu = yarp.client.getCurrentMenu();
+    yarp.client.removeSubMenu(currentMenu);
+    yarp.menus[menuId].menuItems.splice(indexStart, indexEnd);
+    yarp.menus[menuId].setToItem(indexStart % yarp.menus[menuId].menuItems.length);
+};
+
+/**
+ * Returns current menu.
+ * @function getCurrentMenu
+ * @memberof yarp.client
+ * @return {NativeMenu.Menu}
+ */
+yarp.client.getCurrentMenu = () => {
+    return NativeMenu.MenuPool.getCurrentMenu();
+};
+
+/**
+ * Displays submenu.
+ * @function displaySubMenu
+ * @param {String|NativeMenu.Menu} menu Menu id or object.
+ * @memberof yarp.client
+ */
+yarp.client.displaySubMenu = (menu) => {
+    if (typeof menu === 'string') menu = yarp.menus[menu];
+    NativeMenu.MenuPool.displaySubMenu(menu);
+};
+
+/**
+ * Removes submenu.
+ * @function removeSubMenu
+ * @param {String|NativeMenu.Menu} menu Menu id or object.
+ * @memberof yarp.client
+ */
+yarp.client.removeSubMenu = (menu) => {
+    if (typeof menu === 'string') menu = yarp.menus[menu];
+    NativeMenu.MenuPool.removeSubMenu(menu);
+};
+
+/**
+ * Renders the menus.
+ * @event render
+ * @memberof ragemp.client
+ */
 mp.events.add('render', () => {
     for (let menuId in yarp.menus) {
         if (yarp.menus.hasOwnProperty(menuId)) {
@@ -165,13 +322,13 @@ mp.events.add('render', () => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blip.html">Blip</a></li><li><a href="Character.html">Character</a></li><li><a href="Checkpoint.html">Checkpoint</a></li><li><a href="Colshape.html">Colshape</a></li><li><a href="Command.html">Command</a></li><li><a href="Door.html">Door</a></li><li><a href="Event.html">Event</a></li><li><a href="GMObject.html">GMObject</a></li><li><a href="GMProxy.html">GMProxy</a></li><li><a href="Group.html">Group</a></li><li><a href="Hotkey.html">Hotkey</a></li><li><a href="Item.html">Item</a></li><li><a href="Label.html">Label</a></li><li><a href="Location.html">Location</a></li><li><a href="Marker.html">Marker</a></li><li><a href="Menu.html">Menu</a></li><li><a href="Npc.html">Npc</a></li><li><a href="Pool.html">Pool</a></li><li><a href="Prop.html">Prop</a></li><li><a href="Transaction.html">Transaction</a></li><li><a href="User.html">User</a></li><li><a href="Variable.html">Variable</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ragemp.html">ragemp</a></li><li><a href="ragemp.client.html">client</a></li><li><a href="ragemp.server.html">server</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.client.html">client</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li><li><a href="yarp.server.html">server</a></li><li><a href="yarp.utils.html">utils</a></li><li><a href="yarp.utils.client.html">client</a></li><li><a href="yarp.utils.server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#chalk">chalk</a></li><li><a href="global.html#rl">rl</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blip.html">Blip</a></li><li><a href="Character.html">Character</a></li><li><a href="CheckboxMenuItem.html">CheckboxMenuItem</a></li><li><a href="Checkpoint.html">Checkpoint</a></li><li><a href="CloseMenuItem.html">CloseMenuItem</a></li><li><a href="Color.html">Color</a></li><li><a href="Colshape.html">Colshape</a></li><li><a href="Command.html">Command</a></li><li><a href="Door.html">Door</a></li><li><a href="Event.html">Event</a></li><li><a href="GMObject.html">GMObject</a></li><li><a href="global.html#GMProxy">GMProxy</a></li><li><a href="Group.html">Group</a></li><li><a href="Hotkey.html">Hotkey</a></li><li><a href="Item.html">Item</a></li><li><a href="Label.html">Label</a></li><li><a href="ListMenuItem.html">ListMenuItem</a></li><li><a href="Location.html">Location</a></li><li><a href="MainMenu.html">MainMenu</a></li><li><a href="Marker.html">Marker</a></li><li><a href="Menu.html">Menu</a></li><li><a href="MenuItem.html">MenuItem</a></li><li><a href="MenuPool.html">MenuPool</a></li><li><a href="Npc.html">Npc</a></li><li><a href="Pool.html">Pool</a></li><li><a href="Prop.html">Prop</a></li><li><a href="SliderMenuItem.html">SliderMenuItem</a></li><li><a href="Sound.html">Sound</a></li><li><a href="SubMenuItem.html">SubMenuItem</a></li><li><a href="TextMenuItem.html">TextMenuItem</a></li><li><a href="TextureDictionary.html">TextureDictionary</a></li><li><a href="Transaction.html">Transaction</a></li><li><a href="User.html">User</a></li><li><a href="Variable.html">Variable</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="yarp.client.html#.event:yarp:cefTrigger">yarp:cefTrigger</a></li></ul><h3>Namespaces</h3><ul><li><a href="ragemp.html">ragemp</a></li><li><a href="ragemp.client.html">client</a></li><li><a href="ragemp.server.html">server</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.client.html">client</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li><li><a href="yarp.server.html">server</a></li><li><a href="yarp.utils.html">utils</a></li><li><a href="yarp.utils.client.html">client</a></li><li><a href="yarp.utils.server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#chalk">chalk</a></li><li><a href="global.html#rl">rl</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 22 2018 09:34:37 GMT-0300 (Brasilia Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 24 2018 02:02:30 GMT-0300 (Brasilia Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

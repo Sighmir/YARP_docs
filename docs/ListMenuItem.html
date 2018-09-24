@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: ListMenuItem</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: ListMenuItem</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>ListMenuItem<span class="signature">(displayText, data, defaultIndex<span class="signature-attributes">opt</span>, caption<span class="signature-attributes">opt</span>, badge<span class="signature-attributes">opt</span>, textColor<span class="signature-attributes">opt</span>, backgroundColor<span class="signature-attributes">opt</span>, hoverTextColor<span class="signature-attributes">opt</span>, hoverBackgroundColor<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Implements a list menu item.</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="ListMenuItem"><span class="type-signature"></span>new ListMenuItem<span class="signature">(displayText, data, defaultIndex<span class="signature-attributes">opt</span>, caption<span class="signature-attributes">opt</span>, badge<span class="signature-attributes">opt</span>, textColor<span class="signature-attributes">opt</span>, backgroundColor<span class="signature-attributes">opt</span>, hoverTextColor<span class="signature-attributes">opt</span>, hoverBackgroundColor<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates an instance of ListMenuItem.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>displayText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="MenuItem.html">MenuItem</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>caption</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>badge</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    NaN
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>textColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">NativeMenu.Color</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    new NativeMenu.Color(255, 255, 255, 240)
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>backgroundColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">NativeMenu.Color</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    new NativeMenu.Color(0, 0, 0, 120)
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hoverTextColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">NativeMenu.Color</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    new NativeMenu.Color(0, 0, 0, 240)
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hoverBackgroundColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">NativeMenu.Color</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    new NativeMenu.Color(255, 255, 255, 170)
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html">client_packages/YARP/lib/NativeMenu/MenuItems/ListMenuItem.js</a>, <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html#line5">line 5</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="addOnChangeEvent"><span class="type-signature"></span>addOnChangeEvent<span class="signature">(onChangeEvent)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Add on change event to item.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>onChangeEvent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html">client_packages/YARP/lib/NativeMenu/MenuItems/ListMenuItem.js</a>, <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(x, y, yCaption)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Draws the item.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Offset from left 0 to 1.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Offset from top 0 to 1.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>yCaption</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html">client_packages/YARP/lib/NativeMenu/MenuItems/ListMenuItem.js</a>, <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">(x, y, yCaption)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Render the item.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Offset from left 0 to 1.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Offset from top 0 to 1.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>yCaption</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html">client_packages/YARP/lib/NativeMenu/MenuItems/ListMenuItem.js</a>, <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setToItem"><span class="type-signature"></span>setToItem<span class="signature">(newIndex, withSound<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sets list item by index.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>withSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html">client_packages/YARP/lib/NativeMenu/MenuItems/ListMenuItem.js</a>, <a href="client_packages_YARP_lib_NativeMenu_MenuItems_ListMenuItem.js.html#line88">line 88</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blip.html">Blip</a></li><li><a href="Character.html">Character</a></li><li><a href="CheckboxMenuItem.html">CheckboxMenuItem</a></li><li><a href="Checkpoint.html">Checkpoint</a></li><li><a href="CloseMenuItem.html">CloseMenuItem</a></li><li><a href="Color.html">Color</a></li><li><a href="Colshape.html">Colshape</a></li><li><a href="Command.html">Command</a></li><li><a href="Door.html">Door</a></li><li><a href="Event.html">Event</a></li><li><a href="GMObject.html">GMObject</a></li><li><a href="global.html#GMProxy">GMProxy</a></li><li><a href="Group.html">Group</a></li><li><a href="Hotkey.html">Hotkey</a></li><li><a href="Item.html">Item</a></li><li><a href="Label.html">Label</a></li><li><a href="ListMenuItem.html">ListMenuItem</a></li><li><a href="Location.html">Location</a></li><li><a href="MainMenu.html">MainMenu</a></li><li><a href="Marker.html">Marker</a></li><li><a href="Menu.html">Menu</a></li><li><a href="MenuItem.html">MenuItem</a></li><li><a href="MenuPool.html">MenuPool</a></li><li><a href="Npc.html">Npc</a></li><li><a href="Pool.html">Pool</a></li><li><a href="Prop.html">Prop</a></li><li><a href="SliderMenuItem.html">SliderMenuItem</a></li><li><a href="Sound.html">Sound</a></li><li><a href="SubMenuItem.html">SubMenuItem</a></li><li><a href="TextMenuItem.html">TextMenuItem</a></li><li><a href="TextureDictionary.html">TextureDictionary</a></li><li><a href="Transaction.html">Transaction</a></li><li><a href="User.html">User</a></li><li><a href="Variable.html">Variable</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="yarp.client.html#.event:yarp:cefTrigger">yarp:cefTrigger</a></li></ul><h3>Namespaces</h3><ul><li><a href="ragemp.html">ragemp</a></li><li><a href="ragemp.client.html">client</a></li><li><a href="ragemp.server.html">server</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.client.html">client</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li><li><a href="yarp.server.html">server</a></li><li><a href="yarp.utils.html">utils</a></li><li><a href="yarp.utils.client.html">client</a></li><li><a href="yarp.utils.server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#chalk">chalk</a></li><li><a href="global.html#rl">rl</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 24 2018 02:02:32 GMT-0300 (Brasilia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

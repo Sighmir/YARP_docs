@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: client_packages/YARP/lib/NativeMenu/MenuItems/SliderMenuItem.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: client_packages/YARP/lib/NativeMenu/MenuItems/SliderMenuItem.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+/**
+ * Implements a slider menu item.
+ */
+class SliderMenuItem extends NativeMenu.MenuItem {
+  /**
+   * Creates an instance of SliderMenuItem.
+   * @extends {NativeMenu.MenuItem}
+   * @param {String} displayText
+   * @param {Number} min
+   * @param {Number} max
+   * @param {Number} step
+   * @param {*} data
+   * @param {String} [caption='']
+   * @param {Number} [badge=NaN]
+   * @param {NativeMenu.Color} [textColor=new NativeMenu.Color(255, 255, 255, 240)]
+   * @param {NativeMenu.Color} [backgroundColor=new NativeMenu.Color(0, 0, 0, 120)]
+   * @param {NativeMenu.Color} [hoverTextColor=new NativeMenu.Color(0, 0, 0, 240)]
+   * @param {NativeMenu.Color} [hoverBackgroundColor=new NativeMenu.Color(255, 255, 255, 170)]
+   * @memberof SliderMenuItem
+   */
+  constructor(displayText, min, max, step, data = NaN, caption, badge, textColor, backgroundColor, hoverTextColor, hoverBackgroundColor) {
+    super(displayText, data, caption, badge, textColor, backgroundColor, hoverTextColor, hoverBackgroundColor);
+    this.min = min;
+    this.max = max;
+    this.step = step;
+    if (isNaN(data)) {
+      this.data = Math.floor((this.min + this.max) / 2);
+    }
+    this.firstRender = true;
+    this.onChangeEvents = [];
+  }
+
+  /**
+   * Add on change event to item.
+   * @param {Function} onChangeEvent
+   * @memberof SliderMenuItem
+   */
+  addOnChangeEvent(onChangeEvent) {
+    this.onChangeEvents.push(onChangeEvent);
+  }
+
+  /**
+   * Renders the item.
+   * @param {Number} x Offset from left 0 to 1.
+   * @param {Number} y Offset from top 0 to 1.
+   * @param {Number} yCaption
+   * @memberof SliderMenuItem
+   */
+  render(x, y, yCaption) {
+    if (this.firstRender) {
+      this.setToValue(this.data, false);
+      this.firstRender = false;
+    }
+    if (this._isSelect &amp;&amp; Date.now() - NativeMenu.MainMenu.CONTROL_TICK_TIME_MS > NativeMenu.MainMenu.LAST_TICK_TIME) {
+      if (mp.game.controls.isControlPressed(0, NativeMenu.Control.INPUT_CELLPHONE_RIGHT)) {
+        this.setToValue(this.data + this.step);
+      } else {
+        if (mp.game.controls.isControlPressed(0, NativeMenu.Control.INPUT_CELLPHONE_LEFT)) {
+          this.setToValue(this.data - this.step);
+        }
+      }
+    }
+    super.render(x, y, yCaption);
+  }
+
+  /**
+   * Draws the item.
+   * @param {Number} x Offset from left 0 to 1.
+   * @param {Number} y Offset from top 0 to 1.
+   * @param {Number} yCaption
+   * @memberof SliderMenuItem
+   */
+  draw(x, y, yCaption) {
+    super.draw(x, y, yCaption);
+    let xMargin = (0.015 * NativeMenu.MainMenu.SCREEN_RATIO_WIDTH);
+    let xOffset = x + NativeMenu.MainMenu.MENU_DRAW_OFFSET_X - xMargin;
+    let sliderWidth = NativeMenu.MainMenu.MENU_WIDTH / 2.5;
+    let sliderHeight = NativeMenu.MainMenu.MENU_HEIGHT / 4;
+    let xPosition = xOffset - (sliderWidth / 2);
+    mp.game.graphics.drawRect(xPosition, y + NativeMenu.MainMenu.MENU_DRAW_OFFSET_Y, sliderWidth, sliderHeight, 52, 73, 94, 255);
+    let xDataPosition = xOffset - sliderWidth + (sliderWidth / ((this.max - this.min) / this.step) * ((this.data + Math.abs(this.min)) / this.step));
+    mp.game.graphics.drawRect(xDataPosition, y + NativeMenu.MainMenu.MENU_DRAW_OFFSET_Y, 0.004, sliderHeight * 2, this.textColor.red, this.textColor.green, this.textColor.blue, this.textColor.alpha);
+    let arrowWidth = (0.015 * NativeMenu.MainMenu.SCREEN_RATIO_WIDTH);
+    let xLeftArrowPosition = xOffset - sliderWidth - (arrowWidth / 2);
+    NativeMenu.CommonMenuTexture.draw('arrowleft', xLeftArrowPosition, y + NativeMenu.MainMenu.MENU_DRAW_OFFSET_Y, arrowWidth, (0.025 * NativeMenu.MainMenu.SCREEN_RATIO_HEIGHT), this.textColor, 0);
+    NativeMenu.CommonMenuTexture.draw('arrowright', xOffset + (arrowWidth / 2), y + NativeMenu.MainMenu.MENU_DRAW_OFFSET_Y, arrowWidth, (0.025 * NativeMenu.MainMenu.SCREEN_RATIO_HEIGHT), this.textColor, 0);
+  }
+
+  /**
+   * Sets slider to value.
+   * @param {Number} newValue
+   * @param {Boolean} [withSound=true]
+   * @memberof SliderMenuItem
+   */
+  setToValue(newValue, withSound = true) {
+    if (newValue &lt; this.min) {
+      this.data = this.max;
+    } else {
+      if (newValue > this.max) {
+        this.data = this.min;
+      } else {
+        this.data = newValue;
+      }
+    }
+    if (withSound) {
+      NativeMenu.Sound.SOUND_NAV_LEFT_RIGHT.playSound();
+    }
+    NativeMenu.MainMenu.LAST_TICK_TIME = Date.now();
+    this.onChangeEvents.forEach((value) => {
+      value.trigger(this.data);
+    });
+  }
+}
+
+exports = SliderMenuItem;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Blip.html">Blip</a></li><li><a href="Character.html">Character</a></li><li><a href="CheckboxMenuItem.html">CheckboxMenuItem</a></li><li><a href="Checkpoint.html">Checkpoint</a></li><li><a href="CloseMenuItem.html">CloseMenuItem</a></li><li><a href="Color.html">Color</a></li><li><a href="Colshape.html">Colshape</a></li><li><a href="Command.html">Command</a></li><li><a href="Door.html">Door</a></li><li><a href="Event.html">Event</a></li><li><a href="GMObject.html">GMObject</a></li><li><a href="global.html#GMProxy">GMProxy</a></li><li><a href="Group.html">Group</a></li><li><a href="Hotkey.html">Hotkey</a></li><li><a href="Item.html">Item</a></li><li><a href="Label.html">Label</a></li><li><a href="ListMenuItem.html">ListMenuItem</a></li><li><a href="Location.html">Location</a></li><li><a href="MainMenu.html">MainMenu</a></li><li><a href="Marker.html">Marker</a></li><li><a href="Menu.html">Menu</a></li><li><a href="MenuItem.html">MenuItem</a></li><li><a href="MenuPool.html">MenuPool</a></li><li><a href="Npc.html">Npc</a></li><li><a href="Pool.html">Pool</a></li><li><a href="Prop.html">Prop</a></li><li><a href="SliderMenuItem.html">SliderMenuItem</a></li><li><a href="Sound.html">Sound</a></li><li><a href="SubMenuItem.html">SubMenuItem</a></li><li><a href="TextMenuItem.html">TextMenuItem</a></li><li><a href="TextureDictionary.html">TextureDictionary</a></li><li><a href="Transaction.html">Transaction</a></li><li><a href="User.html">User</a></li><li><a href="Variable.html">Variable</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Weapon.html">Weapon</a></li></ul><h3>Events</h3><ul><li><a href="ragemp.client.html#.event:browserCreated">browserCreated</a></li><li><a href="ragemp.client.html#.event:browserDomReady">browserDomReady</a></li><li><a href="ragemp.client.html#.event:browserLoadingFailed">browserLoadingFailed</a></li><li><a href="ragemp.client.html#.event:entityStreamIn">entityStreamIn</a></li><li><a href="ragemp.client.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.client.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.client.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.client.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.client.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.client.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.client.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.client.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.client.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.client.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.client.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.client.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.client.html#.event:playerResurrect">playerResurrect</a></li><li><a href="ragemp.client.html#.event:playerRuleTriggered">playerRuleTriggered</a></li><li><a href="ragemp.client.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.client.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.client.html#.event:render">render</a></li><li><a href="ragemp.server.html#.event:entityCreated">entityCreated</a></li><li><a href="ragemp.server.html#.event:entityDestroyed">entityDestroyed</a></li><li><a href="ragemp.server.html#.event:entityModelChange">entityModelChange</a></li><li><a href="ragemp.server.html#.event:playerChat">playerChat</a></li><li><a href="ragemp.server.html#.event:playerCommand">playerCommand</a></li><li><a href="ragemp.server.html#.event:playerCreateWaypoint">playerCreateWaypoint</a></li><li><a href="ragemp.server.html#.event:playerDeath">playerDeath</a></li><li><a href="ragemp.server.html#.event:playerEnterCheckpoint">playerEnterCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerEnterColshape">playerEnterColshape</a></li><li><a href="ragemp.server.html#.event:playerEnterVehicle">playerEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerExitCheckpoint">playerExitCheckpoint</a></li><li><a href="ragemp.server.html#.event:playerExitColshape">playerExitColshape</a></li><li><a href="ragemp.server.html#.event:playerExitVehicle">playerExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerJoin">playerJoin</a></li><li><a href="ragemp.server.html#.event:playerQuit">playerQuit</a></li><li><a href="ragemp.server.html#.event:playerReachWaypoint">playerReachWaypoint</a></li><li><a href="ragemp.server.html#.event:playerReady">playerReady</a></li><li><a href="ragemp.server.html#.event:playerSpawn">playerSpawn</a></li><li><a href="ragemp.server.html#.event:playerStartEnterVehicle">playerStartEnterVehicle</a></li><li><a href="ragemp.server.html#.event:playerStartExitVehicle">playerStartExitVehicle</a></li><li><a href="ragemp.server.html#.event:playerStreamIn">playerStreamIn</a></li><li><a href="ragemp.server.html#.event:playerStreamOut">playerStreamOut</a></li><li><a href="ragemp.server.html#.event:playerWeaponChange">playerWeaponChange</a></li><li><a href="ragemp.server.html#.event:playerWeaponShot">playerWeaponShot</a></li><li><a href="ragemp.server.html#.event:trailerAttached">trailerAttached</a></li><li><a href="ragemp.server.html#.event:vehicleDamage">vehicleDamage</a></li><li><a href="ragemp.server.html#.event:vehicleDeath">vehicleDeath</a></li><li><a href="ragemp.server.html#.event:vehicleHornToggle">vehicleHornToggle</a></li><li><a href="ragemp.server.html#.event:vehicleSirenToggle">vehicleSirenToggle</a></li><li><a href="yarp.client.html#.event:yarp:cefTrigger">yarp:cefTrigger</a></li></ul><h3>Namespaces</h3><ul><li><a href="ragemp.html">ragemp</a></li><li><a href="ragemp.client.html">client</a></li><li><a href="ragemp.server.html">server</a></li><li><a href="yarp.html">yarp</a></li><li><a href="yarp.cli.html">cli</a></li><li><a href="yarp.client.html">client</a></li><li><a href="yarp.db.html">db</a></li><li><a href="yarp.mng.html">mng</a></li><li><a href="yarp.server.html">server</a></li><li><a href="yarp.utils.html">utils</a></li><li><a href="yarp.utils.client.html">client</a></li><li><a href="yarp.utils.server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#chalk">chalk</a></li><li><a href="global.html#rl">rl</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 24 2018 02:02:30 GMT-0300 (Brasilia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
